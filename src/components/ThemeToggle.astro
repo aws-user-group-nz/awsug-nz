@@ -1,0 +1,183 @@
+---
+/**
+ * Three-way theme control: system → light → dark. Cycles on each click.
+ * Persists light/dark in localStorage; system clears the stored preference.
+ */
+---
+
+<svg class="theme-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-auto" viewBox="0 0 24 24">
+      <path
+        d="M12 2v2M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715M16 12a4 4 0 0 0-4-4M19 5l-1.256 1.256M20 12h2"
+      ></path>
+    </symbol>
+    <symbol id="i-light" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path
+        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+      ></path>
+    </symbol>
+    <symbol id="i-dark" viewBox="0 0 24 24">
+      <path
+        d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
+      ></path>
+    </symbol>
+  </defs>
+</svg>
+
+<button
+  class="theme-toggle"
+  type="button"
+  id="theme-toggle"
+  data-theme-toggle
+  aria-live="polite"
+  title="Change colour theme"
+  hidden
+>
+  <svg class="icon theme-icon theme-icon-auto" aria-hidden="true" focusable="false">
+    <use href="#i-auto"></use>
+  </svg>
+  <svg class="icon theme-icon theme-icon-light" aria-hidden="true" focusable="false">
+    <use href="#i-light"></use>
+  </svg>
+  <svg class="icon theme-icon theme-icon-dark" aria-hidden="true" focusable="false">
+    <use href="#i-dark"></use>
+  </svg>
+  <span class="visually-hidden" id="theme-label">Colour theme: system</span>
+</button>
+
+<style>
+  .theme-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 28%);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--header-text);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition:
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgb(255 255 255 / 8%);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .theme-toggle .icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .theme-icon {
+    display: none;
+  }
+
+  :global(:root:not([data-theme])) .theme-icon-auto,
+  :global(:root[data-theme='light']) .theme-icon-light,
+  :global(:root[data-theme='dark']) .theme-icon-dark {
+    display: block;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'theme';
+  const MODES = ['auto', 'light', 'dark'] as const;
+  type Mode = (typeof MODES)[number];
+
+  const LABELS: Record<Mode, string> = {
+    auto: 'Colour theme: system',
+    light: 'Colour theme: light',
+    dark: 'Colour theme: dark',
+  };
+
+  function current(): Mode {
+    const t = document.documentElement.dataset.theme;
+    return t === 'light' || t === 'dark' ? t : 'auto';
+  }
+
+  function apply(mode: Mode) {
+    const root = document.documentElement;
+    if (mode === 'auto') {
+      delete root.dataset.theme;
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* storage unavailable */
+      }
+    } else {
+      root.dataset.theme = mode;
+      try {
+        localStorage.setItem(STORAGE_KEY, mode);
+      } catch {
+        /* storage unavailable */
+      }
+    }
+
+    const button = document.getElementById('theme-toggle');
+    const label = document.getElementById('theme-label');
+    if (label) label.textContent = LABELS[mode];
+    if (button) {
+      button.setAttribute('title', LABELS[mode]);
+      button.hidden = false;
+    }
+  }
+
+  function restoreFromStorage() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.dataset.theme = saved;
+      } else {
+        delete document.documentElement.dataset.theme;
+      }
+    } catch {
+      /* leave prefers-color-scheme */
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    restoreFromStorage();
+    apply(current());
+  });
+
+  const scope = globalThis as typeof globalThis & {
+    __awsugThemeToggleBound?: boolean;
+  };
+  if (!scope.__awsugThemeToggleBound) {
+    scope.__awsugThemeToggleBound = true;
+    document.addEventListener('click', (event) => {
+      const button = (event.target as Element | null)?.closest?.('[data-theme-toggle]');
+      if (!button) return;
+      const next = MODES[(MODES.indexOf(current()) + 1) % MODES.length];
+      apply(next);
+    });
+  }
+</script>

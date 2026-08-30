@@ -1,0 +1,193 @@
+---
+import Icon from './Icon.astro';
+
+interface Person {
+  name: string;
+  role?: string;
+  company?: string;
+  photo?: string;
+  linkedin?: string;
+  url?: string;
+}
+
+interface Props {
+  people: Person[];
+}
+
+const { people } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function photoSrc(person: Person): string | undefined {
+  if (!person.photo) return undefined;
+  if (/^https?:\/\//i.test(person.photo)) return person.photo;
+  return `${base}/people/${person.photo}`;
+}
+
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
+  return `${parts[0]![0] ?? ''}${parts[parts.length - 1]![0] ?? ''}`.toUpperCase();
+}
+---
+
+{
+  people.length > 0 && (
+    <section class="leads">
+      <h2 class="leads-label">
+        {people.length === 1 ? 'Meetup lead' : 'Meetup leads'}
+      </h2>
+      <ul class="leads-list">
+        {people.map((person) => {
+          const src = photoSrc(person);
+          const line = [person.role, person.company].filter(Boolean).join(' · ');
+          return (
+            <li class="lead">
+              <div class="lead-avatar" aria-hidden="true">
+                {src ? (
+                  <img src={src} alt="" width="120" height="120" loading="lazy" decoding="async" />
+                ) : (
+                  <span class="lead-initials">{initials(person.name)}</span>
+                )}
+              </div>
+              <div class="lead-body">
+                <p class="lead-name">{person.name}</p>
+                {line && <p class="lead-line">{line}</p>}
+              </div>
+              {(person.linkedin || person.url) && (
+                <p class="lead-links">
+                  {person.linkedin && (
+                    <a
+                      href={person.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${person.name} on LinkedIn`}
+                    >
+                      <Icon name="linkedin" size="sm" />
+                    </a>
+                  )}
+                  {person.url && (
+                    <a
+                      href={person.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${person.name} website`}
+                    >
+                      <Icon name="external" size="sm" />
+                    </a>
+                  )}
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .leads {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+
+  .leads-label {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .leads-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .lead {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  /* Oceania-style ring + fixed square crop so every face fills the circle. */
+  .lead-avatar {
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 50%;
+    padding: 3px;
+    flex-shrink: 0;
+    background: linear-gradient(
+      135deg,
+      var(--accent) 0%,
+      color-mix(in srgb, var(--accent) 55%, #f0c14b) 100%
+    );
+  }
+
+  .lead-avatar img,
+  .lead-initials {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+
+  .lead-avatar img {
+    object-fit: cover;
+    object-position: center 20%;
+    background: var(--surface-sunken);
+  }
+
+  .lead-initials {
+    display: grid;
+    place-items: center;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    background: var(--surface);
+  }
+
+  .lead-name {
+    font-weight: 700;
+    font-size: var(--text-md);
+    line-height: 1.25;
+  }
+
+  .lead-line {
+    margin-top: 2px;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  .lead-links {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  .lead-links a {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    min-width: 44px;
+    min-height: 44px;
+    color: var(--accent-text);
+    border-radius: var(--radius-sm);
+  }
+
+  .lead-links a:hover,
+  .lead-links a:focus-visible {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+</style>

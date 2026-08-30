@@ -1,0 +1,47 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  lede?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, lede, ogImage, noindex } = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  noindex={noindex}
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+        <h1 class="page-title">{title}</h1>
+        {lede && <p class="lede">{lede}</p>}
+        <div class="prose">
+          <slot />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .page-title + .lede {
+    margin-bottom: var(--space-5);
+  }
+
+  .lede + .prose,
+  .page-title + .prose {
+    margin-top: var(--space-5);
+  }
+</style>

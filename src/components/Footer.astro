@@ -1,0 +1,175 @@
+---
+import site from '../data/site.json';
+import Icon from './Icon.astro';
+import type { IconName } from './Icon.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-about">
+      <p class="footer-name">{site.legalName}</p>
+      <p class="footer-blurb">{site.tagline}</p>
+      <a class="footer-email" href={`mailto:${site.emails.enquiries}`}>
+        {site.emails.enquiries}
+      </a>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <h2 class="footer-heading">Society</h2>
+      <ul>
+        {
+          site.footerLinks.map((item) => (
+            <li>
+              <a href={`${base}${item.href}`}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav class="footer-nav" aria-label="Community Days">
+      <h2 class="footer-heading">Community Days</h2>
+      <ul>
+        {
+          site.relatedSites.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="footer-social">
+      <h2 class="footer-heading">Connect</h2>
+      <ul>
+        {
+          site.socials.map((item) => (
+            <li>
+              <a
+                class={`social-link social-link--${item.icon}`}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name={item.icon as IconName} size="sm" />
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-legal">
+    <p>&copy; {year} {site.legalName}. Community run, vendor neutral.</p>
+    <p class="footer-note">
+      AWS and the AWS logo are trademarks of Amazon.com, Inc. or its affiliates.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    padding-block: var(--space-7) var(--space-5);
+    margin-top: var(--space-8);
+  }
+
+  .footer-inner {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .footer-name {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  .footer-blurb {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .footer-email {
+    display: inline-block;
+    margin-top: var(--space-3);
+    color: var(--accent);
+    font-size: var(--text-sm);
+  }
+
+  .footer-heading {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-nav ul,
+  .footer-social ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer-nav a,
+  .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: inherit;
+    text-decoration: none;
+    font-size: var(--text-sm);
+  }
+
+  .footer-nav a:hover,
+  .footer-social a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  /* Brand glyph colours (labels stay footer text / accent on hover). */
+  .social-link--discord :global(.icon) {
+    color: #5865f2;
+  }
+
+  .social-link--linkedin :global(.icon) {
+    color: #0a66c2;
+  }
+
+  .social-link--facebook :global(.icon) {
+    color: #1877f2;
+  }
+
+  .social-link--youtube :global(.icon) {
+    color: #ff0000;
+  }
+
+  .footer-legal {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgb(255 255 255 / 10%);
+    font-size: var(--text-xs);
+  }
+
+  .footer-note {
+    margin-top: var(--space-1);
+    opacity: 0.7;
+  }
+</style>

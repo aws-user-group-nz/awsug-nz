@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SponsorGrid from '../components/SponsorGrid.astro';
+import Icon from '../components/Icon.astro';
+import site from '../data/site.json';
+import sponsors from '../data/sponsors.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Sponsors"
+  description="The organisations that make AWS User Group Aotearoa events possible, and how to become one of them."
+  ogImage="sponsors.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+      <h1 class="page-title">Our sponsors</h1>
+      <p class="lede">
+        AWSUG Aotearoa is run by volunteers. Our sponsors cover the venues,
+        food and travel that make free community events possible.
+      </p>
+
+      <div class="grid-block">
+        <SponsorGrid lazy={false} />
+      </div>
+
+      <section class="callout">
+        <h2>Interested in sponsoring?</h2>
+        <p>
+          Our sponsorship pack covers the tiers available, what each one
+          includes, and where your support goes. We're happy to talk through
+          what would work for your organisation.
+        </p>
+        <div class="callout-actions">
+          <a
+            class="btn btn-primary"
+            href={`mailto:${site.emails.sponsor}`}
+          >
+            Email {site.emails.sponsor}
+          </a>
+          <a class="btn btn-outline" href={`${base}${sponsors.packUrl}`}>
+            <Icon name="arrow-right" size="sm" /> Sponsorship pack
+          </a>
+        </div>
+      </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .grid-block {
+    margin-top: var(--space-7);
+  }
+
+  .callout {
+    margin-top: var(--space-8);
+    padding: var(--space-6);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .callout p {
+    margin: var(--space-3) auto var(--space-5);
+    max-width: 60ch;
+    color: var(--text-secondary);
+  }
+
+  .callout-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+  }
+</style>

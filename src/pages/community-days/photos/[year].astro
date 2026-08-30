@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PhotoGrid from '../../../components/PhotoGrid.astro';
+import site from '../../../data/site.json';
+import manifest2023 from '../../../data/photo-manifests/2023.json';
+import manifest2024 from '../../../data/photo-manifests/2024.json';
+import manifest2025 from '../../../data/photo-manifests/2025.json';
+
+/**
+ * Galleries are built from vendored manifests, so no network access is needed
+ * at build time. The images themselves are hotlinked from the existing archive
+ * — none of them are committed, and the bucket serving them is untouched.
+ */
+export function getStaticPaths() {
+  const manifests = [manifest2023, manifest2024, manifest2025];
+  const years = manifests.map((m) => m.year).sort((a, b) => b - a);
+
+  return manifests.map((manifest) => ({
+    params: { year: String(manifest.year) },
+    props: { manifest, years },
+  }));
+}
+
+const { manifest, years } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const dirUrl = `${site.photoArchiveBase}/${manifest.dir}`;
+---
+
+<BaseLayout
+  title={`AWS Community Day ${manifest.year} photos`}
+  description={`${manifest.photos.length} photos from AWS Community Day Aotearoa ${manifest.year}.`}
+  ogImage="community-days.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+      <a class="back" href={`${base}/community-days`}>Community Days</a>
+      <h1 class="page-title">AWS Community Day {manifest.year}</h1>
+      <p class="lede">{manifest.photos.length} photos from the day.</p>
+
+      <nav class="years" aria-label="Photo years">
+        {
+          years.map((year) => (
+            <a
+              href={`${base}/community-days/photos/${year}`}
+              class:list={['year-tab', year === manifest.year && 'is-current']}
+              aria-current={year === manifest.year ? 'page' : undefined}
+            >
+              {year}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="grid-block">
+        <PhotoGrid
+          photos={manifest.photos}
+          dirUrl={dirUrl}
+          year={manifest.year}
+        />
+      </div>
+
+      <p class="note">
+        These are full-size originals, so they're large files. We're working on
+        generating smaller thumbnails.
+      </p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: var(--space-3);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .years {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+  }
+
+  .year-tab {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  .year-tab:hover {
+    border-color: var(--accent-text);
+    color: var(--accent-text);
+  }
+
+  .year-tab.is-current {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--text-on-accent);
+  }
+
+  .grid-block {
+    margin-top: var(--space-6);
+  }
+
+  .note {
+    margin-top: var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+</style>

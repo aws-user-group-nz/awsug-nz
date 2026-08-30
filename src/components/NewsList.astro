@@ -1,0 +1,122 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+
+interface Props {
+  items: CollectionEntry<'news'>[];
+  /** Link each headline through to its own page. */
+  linkTitles?: boolean;
+  /**
+   * h3 suits the home page, where these sit under an h2 section heading.
+   * Standalone pages pass h2 so the outline does not skip a level.
+   */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { items, linkTitles = true, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const dateFormat = new Intl.DateTimeFormat('en-NZ', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'Pacific/Auckland',
+});
+
+/** Internal hrefs need the base prefix; external ones must be left alone. */
+function resolve(href: string) {
+  return href.startsWith('/') ? `${base}${href}` : href;
+}
+---
+
+<ul class="news">
+  {
+    items.map((item) => (
+      <li class="news-item card">
+        <div class="news-meta">
+          {item.data.badge && <span class="tag tag-accent">{item.data.badge}</span>}
+          <time datetime={item.data.date.toISOString()}>
+            {dateFormat.format(item.data.date)}
+          </time>
+        </div>
+
+        <Heading class="news-title">
+          {linkTitles ? (
+            <a href={`${base}/news/${item.id}`}>{item.data.title}</a>
+          ) : (
+            item.data.title
+          )}
+        </Heading>
+
+        <p class="news-summary">{item.data.summary}</p>
+
+        {item.data.link && (
+          <a
+            class="news-link"
+            href={resolve(item.data.link.href)}
+            target={item.data.link.href.startsWith('/') ? undefined : '_blank'}
+            rel={item.data.link.href.startsWith('/') ? undefined : 'noopener noreferrer'}
+          >
+            {item.data.link.label} <Icon name="arrow-right" size="sm" />
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .news {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .news-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+  }
+
+  /* Astro cannot add its scope attribute to a dynamically-chosen tag, so the
+     heading below is emitted without one and scoped selectors miss it. */
+  :global(.news-title) {
+    font-size: var(--text-md);
+    margin-top: var(--space-3);
+  }
+
+  :global(.news-title) a {
+    text-decoration: none;
+  }
+
+  .news-title a:hover {
+    color: var(--accent-text);
+  }
+
+  .news-summary {
+    margin-top: var(--space-2);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .news-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    color: var(--accent-text);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  .news-link:hover {
+    text-decoration: underline;
+  }
+</style>

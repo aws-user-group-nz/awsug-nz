@@ -1,0 +1,96 @@
+/*
+ * Semantic tokens: what a colour is *for*, not what it looks like.
+ * This is the only layer components should reference, and the only layer a
+ * theme remaps. Keep primitive colour names honest (do not redefine
+ * `--color-white` to a dark navy in dark mode).
+ *
+ * Theming resolves in this order:
+ *   1. light defaults below
+ *   2. prefers-color-scheme: dark  (system preference)
+ *   3. [data-theme="light|dark"]   (explicit user choice, wins over system)
+ */
+
+:root {
+  --surface: var(--white);
+  --surface-raised: var(--white);
+  --surface-sunken: var(--grey-050);
+  --surface-inverse: var(--navy-900);
+
+  --text-primary: var(--navy-900);
+  --text-secondary: var(--grey-600);
+  --text-on-inverse: var(--white);
+  --text-on-accent: var(--black);
+
+  --accent: var(--orange-500);
+  --accent-hover: var(--orange-600);
+  /* Accent used as text. Separate from --accent because the brand orange is
+     legible on dark surfaces but not on light ones. */
+  --accent-text: var(--orange-800);
+
+  --border: var(--grey-100);
+  --border-strong: var(--grey-200);
+
+  --header-bg: var(--navy-900);
+  --header-text: var(--white);
+  --footer-bg: var(--navy-900);
+  --footer-text: var(--grey-200);
+
+  --success: var(--green-500);
+  --danger: var(--red-600);
+
+  --overlay: rgb(0 0 0 / 70%);
+  --focus-ring: var(--orange-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: var(--ink-800);
+    --surface-raised: var(--navy-700);
+    --surface-sunken: var(--ink-900);
+    --surface-inverse: var(--black);
+
+    --text-primary: var(--grey-050);
+    --text-secondary: var(--grey-200);
+    --accent-text: var(--orange-500);
+
+    --border: var(--navy-700);
+    --border-strong: var(--grey-600);
+
+    --header-bg: var(--black);
+    --footer-bg: var(--black);
+  }
+}
+
+[data-theme='light'] {
+  --surface: var(--white);
+  --surface-raised: var(--white);
+  --surface-sunken: var(--grey-050);
+  --surface-inverse: var(--navy-900);
+
+  --text-primary: var(--navy-900);
+  --text-secondary: var(--grey-600);
+  --accent-text: var(--orange-800);
+
+  --border: var(--grey-100);
+  --border-strong: var(--grey-200);
+
+  --header-bg: var(--navy-900);
+  --footer-bg: var(--navy-900);
+}
+
+[data-theme='dark'] {
+  --surface: var(--ink-800);
+  --surface-raised: var(--navy-700);
+  --surface-sunken: var(--ink-900);
+  --surface-inverse: var(--black);
+
+  --text-primary: var(--grey-050);
+  --text-secondary: var(--grey-200);
+  --accent-text: var(--orange-500);
+
+  --border: var(--navy-700);
+  --border-strong: var(--grey-600);
+
+  --header-bg: var(--black);
+  --footer-bg: var(--black);
+}

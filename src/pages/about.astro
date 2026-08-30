@@ -1,0 +1,61 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PersonList from '../components/PersonList.astro';
+import committee from '../data/committee.json';
+
+const page = await getEntry('pages', 'about');
+if (!page) throw new Error('Missing content/pages/about.md');
+const { Content } = await render(page);
+---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  ogImage="about.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+        <h1 class="page-title">{page.data.title}</h1>
+        {page.data.lede && <p class="lede">{page.data.lede}</p>}
+        <div class="prose">
+          <Content />
+        </div>
+
+        <div class="people-block">
+          <h2 class="section-title">Committee</h2>
+          <PersonList people={committee.committee} variant="officers" />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .page-title + .lede {
+    margin-bottom: var(--space-5);
+  }
+
+  .lede + .prose,
+  .page-title + .prose {
+    margin-top: var(--space-5);
+  }
+
+  .people-block {
+    margin-top: var(--space-8);
+  }
+
+  .people-block .section-title {
+    margin-top: var(--space-7);
+  }
+
+  .content-panel :global(.people-officers) {
+    max-width: none;
+    margin-inline: 0;
+  }
+</style>

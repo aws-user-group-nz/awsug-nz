@@ -1,0 +1,183 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import site from '../../data/site.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const meetups = (await getCollection('meetups')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout
+  title="Meetups"
+  description="AWS meetups across Aotearoa New Zealand — Auckland, Wellington, Christchurch and Northland."
+  ogImage="meetups.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+        <h1 class="page-title">Meetups</h1>
+        <p class="lede">
+          We run regular meetups around the country. They're free, everyone is
+          welcome, and you don't need to know anything about AWS to come along.
+        </p>
+
+        <ul class="grid meetup-grid">
+          {
+            meetups.map((meetup) => (
+              <li>
+                <a class="card card-link" href={`${base}/meetups/${meetup.id}`}>
+                  <span class="meetup-region">{meetup.data.region}</span>
+                  <h2 class="meetup-title">{meetup.data.title}</h2>
+                  <p class="meetup-desc">{meetup.data.description}</p>
+                  <span class="meetup-more">
+                    Details <Icon name="arrow-right" size="sm" />
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="callout">
+          <h2>Want a meetup in your city?</h2>
+          <p>
+            If there's no group near you, we'd genuinely like to help you start
+            one. Say hello on Discord and we'll talk you through it.
+          </p>
+          <a
+            class="btn btn-primary"
+            href={site.discord.invite}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="discord" size="sm" /> Ask on Discord
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .meetup-grid {
+    list-style: none;
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+
+  @media (max-width: 900px) {
+    .meetup-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .meetup-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .meetup-grid > li {
+    display: flex;
+    min-width: 0;
+  }
+
+  .meetup-grid .card-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    flex: 1;
+    width: 100%;
+    padding: 1.15rem 1.15rem 1.05rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: none;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .meetup-grid .card-link:hover {
+    border-color: var(--accent);
+    background: var(--surface-raised);
+    box-shadow: none;
+    transform: translateY(-2px);
+  }
+
+  .meetup-grid .card-link:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .meetup-region {
+    margin: 0;
+    color: var(--accent-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .meetup-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+
+  .meetup-desc {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .meetup-more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: 0.35rem;
+    color: var(--accent-text);
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .meetup-grid .card-link,
+    .meetup-grid .card-link:hover {
+      transform: none;
+    }
+  }
+
+  .callout {
+    margin-top: var(--space-8);
+    padding: var(--space-6);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .callout p {
+    margin: var(--space-3) auto var(--space-5);
+    max-width: 55ch;
+    color: var(--text-secondary);
+  }
+</style>

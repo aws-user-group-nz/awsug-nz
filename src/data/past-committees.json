@@ -1,0 +1,721 @@
+[
+  {
+    "year": 2025,
+    "people": [
+      {
+        "name": "Paul Dunlop",
+        "photo": "paul-dunlop.jpg",
+        "linkedin": "https://www.linkedin.com/in/pauldunlopnz",
+        "role": "President"
+      },
+      {
+        "name": "Geethika Guruge",
+        "photo": "geethika-guruge.jpg",
+        "linkedin": "https://www.linkedin.com/in/geethika-guruge/",
+        "role": "Vice President"
+      },
+      {
+        "name": "Ramaswamy Arunachalam",
+        "photo": "ramaswamy-arunachalam.jpg",
+        "linkedin": "https://www.linkedin.com/in/ramstack",
+        "role": "Secretary"
+      },
+      {
+        "name": "Arshad Zackeriya",
+        "photo": "arshad-zackeriya.jpg",
+        "linkedin": "https://www.linkedin.com/in/arshad-zackeriya-713b821b",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Dylan Mama",
+        "photo": "dylan-mama.jpg",
+        "linkedin": "https://www.linkedin.com/in/dylanmama/",
+        "role": "Northland AWS UG Leader"
+      },
+      {
+        "name": "Alice Jowsey",
+        "photo": "alice-jowsey.jpg",
+        "linkedin": "https://www.linkedin.com/in/alice-jowsey-735a21a4/"
+      },
+      {
+        "name": "Casey Orr",
+        "photo": "casey-orr.jpg",
+        "linkedin": "https://www.linkedin.com/in/casey-orr-97280a163/"
+      },
+      {
+        "name": "Dipin Thomas",
+        "photo": "dipin-thomas.jpg",
+        "linkedin": "https://www.linkedin.com/in/dipin-thomas/"
+      },
+      {
+        "name": "Hrishi Hiremath",
+        "photo": "hrishi-hiremath.jpg",
+        "linkedin": "https://www.linkedin.com/in/hrishihiremath/"
+      },
+      {
+        "name": "Isuri Shashipraba",
+        "photo": "isuri-shashipraba.jpg",
+        "linkedin": "https://www.linkedin.com/in/isurishashipraba/"
+      },
+      {
+        "name": "Jessica Veng",
+        "photo": "jessica-veng.jpg",
+        "linkedin": "https://www.linkedin.com/in/jessica-veng-0a4477149/"
+      },
+      {
+        "name": "Keith Archibald",
+        "photo": "keith-archibald.jpg",
+        "linkedin": "https://www.linkedin.com/in/keith-archb/"
+      },
+      {
+        "name": "Kobe Xu",
+        "photo": "kobe-xu.jpg",
+        "linkedin": "https://www.linkedin.com/in/kobe-xu/"
+      },
+      {
+        "name": "Lilupa Karu",
+        "photo": "lilupa-karu.jpg",
+        "linkedin": "https://www.linkedin.com/in/lilupa-karu/"
+      },
+      {
+        "name": "Mike Rewiri-Thorsen",
+        "photo": "mike-rewiri-thorsen.jpg",
+        "linkedin": "https://www.linkedin.com/in/michaelrewirithorsen"
+      },
+      {
+        "name": "Natalia Nam",
+        "photo": "natalia-nam.jpg",
+        "linkedin": "https://www.linkedin.com/in/natalia-nam/"
+      },
+      {
+        "name": "Niamh Mailey",
+        "photo": "niamh-mailey.jpg",
+        "linkedin": "https://www.linkedin.com/in/niamhmaileygraphicdesign/"
+      },
+      {
+        "name": "Priya Hiremath"
+      },
+      {
+        "name": "Sebastian Krueger",
+        "photo": "sebastian-krueger.jpg",
+        "linkedin": "https://www.linkedin.com/in/sebastiankrueger/"
+      },
+      {
+        "name": "Sergio Pereira Filho",
+        "photo": "sergio-pereira-filho.jpg",
+        "linkedin": "https://www.linkedin.com/in/sergiolpf/"
+      },
+      {
+        "name": "Terence White",
+        "photo": "terence-white.jpg",
+        "linkedin": "https://www.linkedin.com/in/terencewhite/"
+      }
+    ]
+  },
+  {
+    "year": 2024,
+    "people": [
+      {
+        "name": "Sebastian Krueger",
+        "photo": "sebastian-krueger.jpg",
+        "linkedin": "https://www.linkedin.com/in/sebastiankrueger/",
+        "role": "President"
+      },
+      {
+        "name": "Geethika Guruge",
+        "photo": "geethika-guruge.jpg",
+        "linkedin": "https://www.linkedin.com/in/geethika-guruge/",
+        "role": "Vice President"
+      },
+      {
+        "name": "Ramaswamy Arunachalam",
+        "photo": "ramaswamy-arunachalam.jpg",
+        "linkedin": "https://www.linkedin.com/in/ramstack",
+        "role": "Secretary"
+      },
+      {
+        "name": "Arshad Zackeriya",
+        "photo": "arshad-zackeriya.jpg",
+        "linkedin": "https://www.linkedin.com/in/arshad-zackeriya-713b821b",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Terence White",
+        "photo": "terence-white.jpg",
+        "linkedin": "https://www.linkedin.com/in/terencewhite/",
+        "role": "Web Site Admin"
+      },
+      {
+        "name": "Dylan Mama",
+        "photo": "dylan-mama.jpg",
+        "linkedin": "https://www.linkedin.com/in/dylanmama/",
+        "role": "Northland AWS UG Leader"
+      },
+      {
+        "name": "Charlie Hunter",
+        "photo": "charlie-hunter.jpg",
+        "linkedin": "https://www.linkedin.com/in/charlie-hunter-8461a91b4/",
+        "role": "Christchurch AWS UG Leader"
+      },
+      {
+        "name": "Yoan Tresfield",
+        "photo": "yoan-tresfield.jpg",
+        "linkedin": "https://www.linkedin.com/in/yoan-tresfield/",
+        "role": "Christchurch AWS UG Leader"
+      },
+      {
+        "name": "Alice Jowsey",
+        "photo": "alice-jowsey.jpg",
+        "linkedin": "https://www.linkedin.com/in/alice-jowsey-735a21a4/"
+      },
+      {
+        "name": "Barbora Klusackova",
+        "photo": "barbora-klusackova.jpg",
+        "linkedin": "https://www.linkedin.com/in/barboraklu/"
+      },
+      {
+        "name": "Casey Orr",
+        "photo": "casey-orr.jpg",
+        "linkedin": "https://www.linkedin.com/in/casey-orr-97280a163/"
+      },
+      {
+        "name": "Chamila de Alwis",
+        "photo": "chamila-de-alwis.jpg",
+        "linkedin": "https://www.linkedin.com/in/chamilad/"
+      },
+      {
+        "name": "Chris Martin Watson",
+        "photo": "chris-watson.jpg",
+        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/"
+      },
+      {
+        "name": "Darshit Pandya",
+        "photo": "darshit-pandya.jpg",
+        "linkedin": "https://www.linkedin.com/in/darshitpandya/"
+      },
+      {
+        "name": "Dinesh Sharma",
+        "photo": "dinesh-sharma.jpg",
+        "linkedin": "https://www.linkedin.com/in/dineshsharma2511/"
+      },
+      {
+        "name": "Garima Ahlawat",
+        "photo": "garima-ahlawat.jpg",
+        "linkedin": "https://www.linkedin.com/in/garima-ahlawat-20ab918a/"
+      },
+      {
+        "name": "Gleidson Nascimento",
+        "photo": "gleidson-nascimento.jpg",
+        "linkedin": "https://www.linkedin.com/in/gleidsonnascimento/"
+      },
+      {
+        "name": "Hrishi Hiremath",
+        "photo": "hrishi-hiremath.jpg",
+        "linkedin": "https://www.linkedin.com/in/hrishihiremath/"
+      },
+      {
+        "name": "Jacob Ong",
+        "photo": "jacob-ong.jpg",
+        "linkedin": "https://www.linkedin.com/in/jacob-ong-8a567771/"
+      },
+      {
+        "name": "Jessica Veng",
+        "photo": "jessica-veng.jpg",
+        "linkedin": "https://www.linkedin.com/in/jessica-veng-0a4477149/"
+      },
+      {
+        "name": "Keith Archibald",
+        "photo": "keith-archibald.jpg",
+        "linkedin": "https://www.linkedin.com/in/keith-archb/"
+      },
+      {
+        "name": "Kobe Xu",
+        "photo": "kobe-xu.jpg",
+        "linkedin": "https://www.linkedin.com/in/kobe-xu/"
+      },
+      {
+        "name": "Lilupa Karu",
+        "photo": "lilupa-karu.jpg",
+        "linkedin": "https://www.linkedin.com/in/lilupa-karu/"
+      },
+      {
+        "name": "Mark Goatley",
+        "photo": "mark-goatley.jpg",
+        "linkedin": "https://www.linkedin.com/in/markgoatley/"
+      },
+      {
+        "name": "Nick Cooper",
+        "photo": "nick-cooper.jpg",
+        "linkedin": "https://www.linkedin.com/in/nicholas-cooper1/"
+      },
+      {
+        "name": "Niamh Mailey",
+        "photo": "niamh-mailey.jpg",
+        "linkedin": "https://www.linkedin.com/in/niamhmaileygraphicdesign/"
+      },
+      {
+        "name": "Paul Dunlop",
+        "photo": "paul-dunlop.jpg",
+        "linkedin": "https://www.linkedin.com/in/pauldunlopnz"
+      },
+      {
+        "name": "Priya Hiremath"
+      },
+      {
+        "name": "Riaan de Klerk",
+        "photo": "riaan-de-klerk.jpg",
+        "linkedin": "https://www.linkedin.com/in/riaan-de-klerk/"
+      },
+      {
+        "name": "Terence White",
+        "photo": "terence-white.jpg",
+        "linkedin": "https://www.linkedin.com/in/terencewhite/"
+      },
+      {
+        "name": "Tom Cully"
+      }
+    ]
+  },
+  {
+    "year": 2023,
+    "people": [
+      {
+        "name": "Mark Goatley",
+        "photo": "mark-goatley.jpg",
+        "linkedin": "https://www.linkedin.com/in/markgoatley/",
+        "role": "President"
+      },
+      {
+        "name": "Hrishi Hiremath",
+        "photo": "hrishi-hiremath.jpg",
+        "linkedin": "https://www.linkedin.com/in/hrishihiremath/",
+        "role": "Vice President"
+      },
+      {
+        "name": "Sebastian Krueger",
+        "photo": "sebastian-krueger.jpg",
+        "linkedin": "https://www.linkedin.com/in/sebastiankrueger/",
+        "role": "Secretary"
+      },
+      {
+        "name": "Chris Martin Watson",
+        "photo": "chris-watson.jpg",
+        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Scott Patterson",
+        "photo": "scott-patterson.jpg",
+        "linkedin": "https://www.linkedin.com/in/snpatterson/",
+        "role": "Sponsor Lead"
+      },
+      {
+        "name": "Lilupa Karu",
+        "photo": "lilupa-karu.jpg",
+        "linkedin": "https://www.linkedin.com/in/lilupa-karu/",
+        "role": "Swagman"
+      },
+      {
+        "name": "Dylan Mama",
+        "photo": "dylan-mama.jpg",
+        "linkedin": "https://www.linkedin.com/in/dylanmama/",
+        "role": "Northland AWS UG Leader"
+      },
+      {
+        "name": "Nick Cooper",
+        "photo": "nick-cooper.jpg",
+        "linkedin": "https://www.linkedin.com/in/nicholas-cooper1/",
+        "role": "Auckland AWS UG Leader"
+      },
+      {
+        "name": "Riaan de Klerk",
+        "photo": "riaan-de-klerk.jpg",
+        "linkedin": "https://www.linkedin.com/in/riaan-de-klerk/",
+        "role": "Auckland AWS UG Leader"
+      },
+      {
+        "name": "Geethika Guruge",
+        "photo": "geethika-guruge.jpg",
+        "linkedin": "https://www.linkedin.com/in/geethika-guruge/",
+        "role": "Auckland Tools & Programming UG Leader"
+      },
+      {
+        "name": "Arshad Zackeriya",
+        "photo": "arshad-zackeriya.jpg",
+        "linkedin": "https://www.linkedin.com/in/arshad-zackeriya-713b821b",
+        "role": "Wellington AWS UG Leader"
+      },
+      {
+        "name": "Gleidson Nascimento",
+        "photo": "gleidson-nascimento.jpg",
+        "linkedin": "https://www.linkedin.com/in/gleidsonnascimento/",
+        "role": "Wellington AWS UG Leader"
+      },
+      {
+        "name": "Ramaswamy Arunachalam",
+        "photo": "ramaswamy-arunachalam.jpg",
+        "linkedin": "https://www.linkedin.com/in/ramstack",
+        "role": "Wellington AWS UG Leader"
+      },
+      {
+        "name": "Charlie Hunter",
+        "photo": "charlie-hunter.jpg",
+        "linkedin": "https://www.linkedin.com/in/charlie-hunter-8461a91b4/",
+        "role": "Christchurch AWS UG Leader"
+      },
+      {
+        "name": "Yoan Tresfield",
+        "photo": "yoan-tresfield.jpg",
+        "linkedin": "https://www.linkedin.com/in/yoan-tresfield/",
+        "role": "Christchurch AWS UG Leader"
+      },
+      {
+        "name": "Casey Orr",
+        "photo": "casey-orr.jpg",
+        "linkedin": "https://www.linkedin.com/in/casey-orr-97280a163/"
+      },
+      {
+        "name": "Garima Ahlawat",
+        "photo": "garima-ahlawat.jpg",
+        "linkedin": "https://www.linkedin.com/in/garima-ahlawat-20ab918a/"
+      },
+      {
+        "name": "Keith Archibald",
+        "photo": "keith-archibald.jpg",
+        "linkedin": "https://www.linkedin.com/in/keith-archb/"
+      },
+      {
+        "name": "Kobe Xu",
+        "photo": "kobe-xu.jpg",
+        "linkedin": "https://www.linkedin.com/in/kobe-xu/"
+      },
+      {
+        "name": "Niamh Mailey",
+        "photo": "niamh-mailey.jpg",
+        "linkedin": "https://www.linkedin.com/in/niamhmaileygraphicdesign/"
+      },
+      {
+        "name": "Nishant B",
+        "photo": "nishant-b.jpg",
+        "linkedin": "https://www.linkedin.com/in/nishantbahad/"
+      },
+      {
+        "name": "Priya Hiremath"
+      },
+      {
+        "name": "Terence White",
+        "photo": "terence-white.jpg",
+        "linkedin": "https://www.linkedin.com/in/terencewhite/"
+      },
+      {
+        "name": "Tom Cully"
+      }
+    ]
+  },
+  {
+    "year": 2022,
+    "people": [
+      {
+        "name": "Chris Martin Watson",
+        "photo": "chris-watson.jpg",
+        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/",
+        "role": "President"
+      },
+      {
+        "name": "Terence White",
+        "photo": "terence-white.jpg",
+        "linkedin": "https://www.linkedin.com/in/terencewhite/",
+        "role": "President"
+      },
+      {
+        "name": "Sebastian Krueger",
+        "photo": "sebastian-krueger.jpg",
+        "linkedin": "https://www.linkedin.com/in/sebastiankrueger/",
+        "role": "Vice President"
+      },
+      {
+        "name": "Logan Anderson",
+        "photo": "logan-anderson.jpg",
+        "linkedin": "https://www.linkedin.com/in/loginanderson/",
+        "role": "Secretary"
+      },
+      {
+        "name": "Steven Arnold Ensslen",
+        "photo": "steven-ensslen.jpg",
+        "linkedin": "https://www.linkedin.com/in/steven-ensslen-01b87018/",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Gleidson Nascimento",
+        "photo": "gleidson-nascimento.jpg",
+        "linkedin": "https://www.linkedin.com/in/gleidsonnascimento/",
+        "role": "Wellington AWS UG Leader"
+      },
+      {
+        "name": "Casey Orr",
+        "photo": "casey-orr.jpg",
+        "linkedin": "https://www.linkedin.com/in/casey-orr-97280a163/"
+      },
+      {
+        "name": "Daniel Surendran",
+        "photo": "daniel-surendran.jpg",
+        "linkedin": "https://www.linkedin.com/in/danielvijay/"
+      },
+      {
+        "name": "Dawn Rodgers"
+      },
+      {
+        "name": "Garima Ahlawat",
+        "photo": "garima-ahlawat.jpg",
+        "linkedin": "https://www.linkedin.com/in/garima-ahlawat-20ab918a/"
+      },
+      {
+        "name": "Geethika Guruge",
+        "photo": "geethika-guruge.jpg",
+        "linkedin": "https://www.linkedin.com/in/geethika-guruge/"
+      },
+      {
+        "name": "Hrishi Hiremath",
+        "photo": "hrishi-hiremath.jpg",
+        "linkedin": "https://www.linkedin.com/in/hrishihiremath/"
+      },
+      {
+        "name": "Lilupa Karu",
+        "photo": "lilupa-karu.jpg",
+        "linkedin": "https://www.linkedin.com/in/lilupa-karu/"
+      },
+      {
+        "name": "Mark Goatley",
+        "photo": "mark-goatley.jpg",
+        "linkedin": "https://www.linkedin.com/in/markgoatley/"
+      },
+      {
+        "name": "Nick Cooper",
+        "photo": "nick-cooper.jpg",
+        "linkedin": "https://www.linkedin.com/in/nicholas-cooper1/"
+      },
+      {
+        "name": "Paul Dunlop",
+        "photo": "paul-dunlop.jpg",
+        "linkedin": "https://www.linkedin.com/in/pauldunlopnz"
+      },
+      {
+        "name": "Riaan de Klerk",
+        "photo": "riaan-de-klerk.jpg",
+        "linkedin": "https://www.linkedin.com/in/riaan-de-klerk/"
+      },
+      {
+        "name": "Scott Patterson",
+        "photo": "scott-patterson.jpg",
+        "linkedin": "https://www.linkedin.com/in/snpatterson/"
+      },
+      {
+        "name": "Steven Arnold Ensslen",
+        "photo": "steven-ensslen.jpg",
+        "linkedin": "https://www.linkedin.com/in/steven-ensslen-01b87018/"
+      },
+      {
+        "name": "Tom Cully",
+        "linkedin": "https://www.linkedin.com/in/tomcully/"
+      },
+      {
+        "name": "Yoan Tresfield",
+        "photo": "yoan-tresfield.jpg",
+        "linkedin": "https://www.linkedin.com/in/yoan-tresfield/"
+      }
+    ]
+  },
+  {
+    "year": 2021,
+    "people": [
+      {
+        "name": "Sebastian Krueger",
+        "photo": "sebastian-krueger.jpg",
+        "linkedin": "https://www.linkedin.com/in/sebastiankrueger/",
+        "role": "President"
+      },
+      {
+        "name": "Steven Arnold Ensslen",
+        "photo": "steven-ensslen.jpg",
+        "linkedin": "https://www.linkedin.com/in/steven-ensslen-01b87018/",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Gleidson Nascimento",
+        "photo": "gleidson-nascimento.jpg",
+        "linkedin": "https://www.linkedin.com/in/gleidsonnascimento/",
+        "role": "Wellington AWS UG Leader"
+      },
+      {
+        "name": "Carlos Reyneke",
+        "photo": "carlos-reyneke.jpg",
+        "linkedin": "https://www.linkedin.com/in/carlos-reyneke-636037108/"
+      },
+      {
+        "name": "Chris Martin Watson",
+        "photo": "chris-watson.jpg",
+        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/"
+      },
+      {
+        "name": "Daniel Surendran",
+        "photo": "daniel-surendran.jpg",
+        "linkedin": "https://www.linkedin.com/in/danielvijay/"
+      },
+      {
+        "name": "Gopinath Gandu Sekar"
+      },
+      {
+        "name": "Paul Dunlop",
+        "photo": "paul-dunlop.jpg",
+        "linkedin": "https://www.linkedin.com/in/pauldunlopnz"
+      },
+      {
+        "name": "Scott Patterson",
+        "photo": "scott-patterson.jpg",
+        "linkedin": "https://www.linkedin.com/in/snpatterson/"
+      },
+      {
+        "name": "Tom Cully",
+        "linkedin": "https://www.linkedin.com/in/tomcully/"
+      }
+    ]
+  },
+  {
+    "year": 2020,
+    "people": [
+      {
+        "name": "Sebastian Krueger",
+        "photo": "sebastian-krueger.jpg",
+        "linkedin": "https://www.linkedin.com/in/sebastiankrueger/",
+        "role": "President"
+      },
+      {
+        "name": "Daniel Surendran",
+        "photo": "daniel-surendran.jpg",
+        "linkedin": "https://www.linkedin.com/in/danielvijay/",
+        "role": "Secretary"
+      },
+      {
+        "name": "Steven Arnold Ensslen",
+        "photo": "steven-ensslen.jpg",
+        "linkedin": "https://www.linkedin.com/in/steven-ensslen-01b87018/",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Gleidson Nascimento",
+        "photo": "gleidson-nascimento.jpg",
+        "linkedin": "https://www.linkedin.com/in/gleidsonnascimento/",
+        "role": "Wellington AWS UG Leader"
+      },
+      {
+        "name": "Carlos Reyneke",
+        "photo": "carlos-reyneke.jpg",
+        "linkedin": "https://www.linkedin.com/in/carlos-reyneke-636037108/"
+      },
+      {
+        "name": "Chris Martin Watson",
+        "photo": "chris-watson.jpg",
+        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/"
+      },
+      {
+        "name": "Paul Dunlop",
+        "photo": "paul-dunlop.jpg",
+        "linkedin": "https://www.linkedin.com/in/pauldunlopnz"
+      },
+      {
+        "name": "Scott Patterson",
+        "photo": "scott-patterson.jpg",
+        "linkedin": "https://www.linkedin.com/in/snpatterson/"
+      },
+      {
+        "name": "Steven Arnold Ensslen",
+        "photo": "steven-ensslen.jpg",
+        "linkedin": "https://www.linkedin.com/in/steven-ensslen-01b87018/"
+      },
+      {
+        "name": "Tom Cully",
+        "linkedin": "https://www.linkedin.com/in/tomcully/"
+      }
+    ]
+  },
+  {
+    "year": 2019,
+    "people": [
+      {
+        "name": "Tom Cully",
+        "linkedin": "https://www.linkedin.com/in/tomcully/",
+        "role": "Founder"
+      },
+      {
+        "name": "Scott Patterson",
+        "photo": "scott-patterson.jpg",
+        "linkedin": "https://www.linkedin.com/in/snpatterson/",
+        "role": "Co-Founder"
+      },
+      {
+        "name": "Sebastian Krueger",
+        "photo": "sebastian-krueger.jpg",
+        "linkedin": "https://www.linkedin.com/in/sebastiankrueger/",
+        "role": "President"
+      },
+      {
+        "name": "Steven Arnold Ensslen",
+        "photo": "steven-ensslen.jpg",
+        "linkedin": "https://www.linkedin.com/in/steven-ensslen-01b87018/",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Gleidson Nascimento",
+        "photo": "gleidson-nascimento.jpg",
+        "linkedin": "https://www.linkedin.com/in/gleidsonnascimento/",
+        "role": "Wellington AWS UG Leader"
+      },
+      {
+        "name": "Adarsh Jupidi",
+        "photo": "adarsh-jupidi.jpg",
+        "linkedin": "https://www.linkedin.com/in/jcadarsh/"
+      },
+      {
+        "name": "Alkaif Khan",
+        "linkedin": "https://www.linkedin.com/in/alkaif/"
+      },
+      {
+        "name": "Carlos Reyneke",
+        "photo": "carlos-reyneke.jpg",
+        "linkedin": "https://www.linkedin.com/in/carlos-reyneke-636037108/"
+      },
+      {
+        "name": "Charlene Leong",
+        "photo": "charlene-leong.jpg",
+        "linkedin": "https://www.linkedin.com/in/charleneleong/"
+      },
+      {
+        "name": "Chris Martin Watson",
+        "photo": "chris-watson.jpg",
+        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/"
+      },
+      {
+        "name": "Daniel Surendran",
+        "photo": "daniel-surendran.jpg",
+        "linkedin": "https://www.linkedin.com/in/danielvijay/"
+      },
+      {
+        "name": "Jack Reyneke"
+      },
+      {
+        "name": "Lynda Bushe",
+        "linkedin": "https://www.linkedin.com/in/lyndabushe/"
+      },
+      {
+        "name": "Paul Dunlop",
+        "photo": "paul-dunlop.jpg",
+        "linkedin": "https://www.linkedin.com/in/pauldunlopnz"
+      },
+      {
+        "name": "Sai Honig",
+        "photo": "sai-honig.jpg",
+        "linkedin": "https://www.linkedin.com/in/saihonig/"
+      }
+    ]
+  }
+]

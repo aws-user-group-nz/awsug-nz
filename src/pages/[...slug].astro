@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+
+/**
+ * One route for every markdown page. Dedicated routes are excluded when they
+ * render extra UI beyond PageLayout (officers, PDF embed, etc.).
+ */
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  const dedicated = new Set([
+    'about',
+    'history',
+    'constitution',
+    'sponsorship-pack',
+  ]);
+  return pages
+    .filter((page) => !dedicated.has(page.id))
+    .map((page) => ({
+      params: { slug: page.id },
+      props: { page },
+    }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<PageLayout
+  title={page.data.title}
+  description={page.data.description}
+  lede={page.data.lede}
+  ogImage={page.data.ogImage}
+>
+  <Content />
+</PageLayout>

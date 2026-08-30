@@ -1,0 +1,106 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/base.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SEO from '../components/SEO.astro';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import interLatinExt from '@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2?url';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, ogImage, noindex } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang="en-NZ" transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/*
+      First paint critical: reserve the classic scrollbar gutter before any
+      other CSS. Without this, Windows Chrome flashes a wider layout for a
+      frame on MPA navigations — menus/text twitch right then bounce back.
+    */}
+    <style is:inline>
+      html {
+        overflow-y: scroll;
+        scrollbar-gutter: stable;
+      }
+    </style>
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <meta name="theme-color" content="#232f3e" />
+    {/* Preload before first paint so font-display:optional can use Inter. */}
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interLatinExt} as="font" type="font/woff2" crossorigin />
+    <SEO title={title} description={description} ogImage={ogImage} noindex={noindex} />
+    {/*
+      Same-document swaps for in-site links — avoids the full clear/repaint
+      flash of a classic MPA navigation. fallback=swap keeps non-VT browsers
+      instant too (no fade-to-blank animation).
+    */}
+    <ClientRouter fallback="swap" />
+
+    {/*
+      Applies the saved theme before first paint. Must stay inline and
+      un-deferred, otherwise the page flashes the light theme first.
+
+      ClientRouter swaps in a fresh <html> without data-theme, which would
+      fall back to prefers-color-scheme (often dark) and undo the toggle.
+      before-swap copies the choice onto the incoming document before paint.
+    */}
+    <script is:inline>
+      (function () {
+        /* light|dark = explicit choice; otherwise follow system preference. */
+        var KEY = 'theme';
+
+        function applyTheme(root) {
+          try {
+            var saved = localStorage.getItem(KEY);
+            if (saved !== 'light' && saved !== 'dark') {
+              var legacy = localStorage.getItem('awsug-theme');
+              if (legacy === 'light' || legacy === 'dark') {
+                saved = legacy;
+                localStorage.setItem(KEY, legacy);
+                localStorage.removeItem('awsug-theme');
+              }
+            }
+            if (saved === 'light' || saved === 'dark') {
+              root.dataset.theme = saved;
+            } else {
+              delete root.dataset.theme;
+            }
+          } catch (e) {
+            /* localStorage unavailable; fall back to prefers-color-scheme */
+          }
+        }
+
+        applyTheme(document.documentElement);
+
+        document.addEventListener('astro:before-swap', function (event) {
+          applyTheme(event.newDocument.documentElement);
+        });
+
+        /* Avoid scroll-restoration bounce on MPA navigations. */
+        try {
+          if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main" tabindex="-1" transition:animate="none">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

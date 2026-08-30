@@ -1,0 +1,155 @@
+---
+/**
+ * In-page PDF viewer: short intro, framed preview that fills remaining
+ * viewport height (not a tiny box, not a fullscreen takeover), download below.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  lede?: string;
+  pdfHref: string;
+  iframeTitle: string;
+  downloadLabel: string;
+}
+
+const { title, lede, pdfHref, iframeTitle, downloadLabel } = Astro.props;
+---
+
+<div class="pdf-page">
+  <div class="container">
+    <div class="pdf-panel">
+      <div class="pdf-intro">
+        <h1 class="page-title">{title}</h1>
+        {lede && <p class="lede">{lede}</p>}
+        <div class="prose">
+          <slot />
+        </div>
+      </div>
+
+      <div class="pdf-doc">
+        <p class="pdf-actions">
+          <a
+            class="btn btn-primary"
+            href={pdfHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+          >
+            <Icon name="external" size="sm" /> {downloadLabel}
+          </a>
+          <span class="pdf-a11y-note">
+            Recommended for screen reader users.
+          </span>
+        </p>
+        <div class="pdf-frame-wrap">
+          <iframe class="pdf-frame" src={pdfHref} title={iframeTitle}></iframe>
+        </div>
+        <p class="pdf-fallback">
+          On smaller screens the PDF opens via the button above rather than an
+          embedded preview. If the preview does not appear on desktop, use the
+          same button to open or download the PDF.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /*
+   * Fill under the sticky header so the frame grows with the window.
+   * Footer stays in normal flow below — not a modal / fullscreen overlay.
+   */
+  .pdf-page {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - var(--header-height));
+    padding-block: var(--space-5) var(--space-6);
+  }
+
+  .pdf-page > .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .pdf-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: 100%;
+    max-width: min(72rem, 100%);
+    margin-inline: auto;
+  }
+
+  .pdf-intro .lede {
+    margin-bottom: var(--space-4);
+  }
+
+  .pdf-intro .prose {
+    margin-top: var(--space-4);
+  }
+
+  .pdf-doc {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-5);
+    min-height: 0;
+  }
+
+  /*
+   * Wrapper grows into leftover viewport space; iframe absolutely fills it
+   * (plain iframes ignore flex-grow in most browsers).
+   */
+  .pdf-frame-wrap {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: max(28rem, calc(100dvh - var(--header-height) - 14rem));
+  }
+
+  .pdf-frame {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+
+  .pdf-actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+  }
+
+  .pdf-a11y-note {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  .pdf-fallback {
+    flex: 0 0 auto;
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .pdf-frame-wrap {
+      display: none;
+    }
+
+    .pdf-fallback {
+      margin-top: 0;
+    }
+  }
+</style>

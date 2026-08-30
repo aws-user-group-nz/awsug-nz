@@ -1,0 +1,105 @@
+{
+  "name": "AWS User Group Aotearoa",
+  "shortName": "AWSUG Aotearoa",
+  "legalName": "AWS User Group Aotearoa Incorporated Society",
+  "tagline": "Aotearoa New Zealand's AWS community",
+  "description": "AWS User Group Aotearoa brings together cloud professionals, developers, architects and enthusiasts across New Zealand to share knowledge, learn from each other and grow the AWS community.",
+  "locale": "en-NZ",
+  "timezone": "Pacific/Auckland",
+
+  "photoArchiveBase": "https://awsug.nz/communitydays/archive/photos",
+
+  "nav": [
+    { "label": "About", "href": "/about" },
+    { "label": "Meetups", "href": "/meetups" },
+    { "label": "Events", "href": "/events" },
+    { "label": "Community Days", "href": "/community-days" },
+    { "label": "Sponsors", "href": "/sponsors" },
+    { "label": "Resources", "href": "/resources" }
+  ],
+
+  "footerLinks": [
+    { "label": "Code of Conduct", "href": "/code-of-conduct" },
+    { "label": "Our Constitution", "href": "/constitution" },
+    { "label": "Our Regulations", "href": "/regulations" },
+    { "label": "Society Initiatives", "href": "/initiatives" },
+    { "label": "Our History", "href": "/history" },
+    { "label": "News", "href": "/news" }
+  ],
+
+  "emails": {
+    "enquiries": "enquiries@awsug.nz",
+    "sponsor": "sponsor@awsug.nz"
+  },
+
+  "socials": [
+    {
+      "label": "Discord",
+      "href": "https://discord.gg/4UJfJ755T8",
+      "icon": "discord"
+    },
+    {
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/company/aws-user-group-aotearoa/",
+      "icon": "linkedin"
+    },
+    {
+      "label": "Facebook",
+      "href": "https://www.facebook.com/awsugnz",
+      "icon": "facebook"
+    },
+    {
+      "label": "YouTube",
+      "href": "https://www.youtube.com/channel/UCMCXyTTzLSRL2CMwffKdegw",
+      "icon": "youtube"
+    }
+  ],
+
+  "discord": {
+    "invite": "https://discord.gg/4UJfJ755T8",
+    "guildId": "1157469922633466058",
+    "blurb": "Our Discord is where the community actually lives day to day — event announcements, questions, job posts and general cloud chat.",
+    "highlights": [
+      "Ask AWS questions and get answers from people who run it in production",
+      "Meetup announcements and venue details land here first",
+      "Study groups and certification support",
+      "Job and contract opportunities from around Aotearoa"
+    ]
+  },
+
+  "meetupGroups": [
+    {
+      "name": "Auckland",
+      "url": "https://www.meetup.com/AWS_NZ"
+    },
+    {
+      "name": "Auckland Tools & Programming",
+      "url": "https://www.meetup.com/auckland-aws-tools-meetup/"
+    },
+    {
+      "name": "Wellington",
+      "url": "https://www.meetup.com/Amazon-Web-Services-Wellington-User-Group/"
+    },
+    {
+      "name": "Christchurch",
+      "url": "https://www.meetup.com/Christchurch-Amazon-Web-Services-Meetup"
+    },
+    {
+      "name": "Northland",
+      "url": null
+    }
+  ],
+
+  "relatedSites": [
+    {
+      "label": "AWS Community Day Aotearoa",
+      "href": "https://aws-community-day.nz/",
+      "description": "Our in-person conference."
+    },
+    {
+      "label": "AWS Community Day Oceania",
+      "href": "https://oceania.aws-community-day.nz/",
+      "description": "The virtual edition for the Oceania region."
+    }
+  ]
+}

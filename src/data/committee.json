@@ -1,0 +1,120 @@
+{
+  "committee": [
+    {
+      "name": "Paul Dunlop",
+      "role": "President",
+      "company": "Datacom",
+      "photo": "paul-dunlop.jpg",
+      "linkedin": "https://www.linkedin.com/in/pauldunlopnz"
+    },
+    {
+      "name": "Geethika Guruge",
+      "role": "Vice President",
+      "company": "Mantel",
+      "photo": "geethika-guruge.jpg",
+      "linkedin": "https://www.linkedin.com/in/geethika-guruge/"
+    },
+    {
+      "name": "Ramaswamy Arunachalam",
+      "role": "Secretary",
+      "company": "Datacom",
+      "photo": "ramaswamy-arunachalam.jpg",
+      "linkedin": "https://www.linkedin.com/in/ramstack"
+    },
+    {
+      "name": "Arshad Zackeriya",
+      "role": "Treasurer",
+      "company": "Xero",
+      "photo": "arshad-zackeriya.jpg",
+      "linkedin": "https://www.linkedin.com/in/arshad-zackeriya-713b821b",
+      "url": "https://zack.kiwi"
+    },
+    {
+      "name": "Darshit Pandya",
+      "role": "Sponsor Lead",
+      "company": "Serko",
+      "photo": "darshit-pandya.jpg",
+      "linkedin": "https://www.linkedin.com/in/darshitpandya/"
+    },
+    {
+      "name": "John Ajera",
+      "role": "Web Admin Lead",
+      "company": "Earth Sciences New Zealand",
+      "photo": "john-ajera.jpg",
+      "linkedin": "https://www.linkedin.com/in/john-ajera",
+      "url": "https://jajera.github.io/gitprofile"
+    },
+    {
+      "name": "Chiwai Chan",
+      "role": "Social Media Lead",
+      "company": "Datacom",
+      "photo": "chiwai-chan.jpg",
+      "linkedin": "https://www.linkedin.com/in/chiwaichan/"
+    }
+  ],
+  "meetupLeads": [
+    {
+      "region": "Auckland",
+      "meetup": "auckland",
+      "also": "auckland-tools",
+      "people": [
+        {
+          "name": "Geethika Guruge",
+          "company": "Mantel",
+          "photo": "geethika-guruge.jpg",
+          "linkedin": "https://www.linkedin.com/in/geethika-guruge/"
+        }
+      ]
+    },
+    {
+      "region": "Wellington",
+      "meetup": "wellington",
+      "people": [
+        {
+          "name": "Arshad Zackeriya",
+          "company": "Xero",
+          "photo": "arshad-zackeriya.jpg",
+          "linkedin": "https://www.linkedin.com/in/arshad-zackeriya-713b821b",
+          "url": "https://zack.kiwi"
+        },
+        {
+          "name": "Ramaswamy Arunachalam",
+          "company": "Datacom",
+          "photo": "ramaswamy-arunachalam.jpg",
+          "linkedin": "https://www.linkedin.com/in/ramstack"
+        },
+        {
+          "name": "John Ajera",
+          "company": "Earth Sciences New Zealand",
+          "photo": "john-ajera.jpg",
+          "linkedin": "https://www.linkedin.com/in/john-ajera",
+          "url": "https://jajera.github.io/gitprofile"
+        }
+      ]
+    },
+    {
+      "region": "Christchurch",
+      "meetup": "christchurch",
+      "people": [
+        {
+          "name": "Yoan Tresfield",
+          "company": "InIT Solutions",
+          "photo": "yoan-tresfield.jpg",
+          "linkedin": "https://www.linkedin.com/in/yoan-tresfield/"
+        }
+      ]
+    },
+    {
+      "region": "Northland",
+      "meetup": "northland",
+      "people": [
+        {
+          "name": "Dylan Mama",
+          "company": "CyberCX",
+          "photo": "dylan-mama.jpg",
+          "linkedin": "https://www.linkedin.com/in/dylanmama/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import site from '../data/site.json';
+
+/**
+ * A real 404 document, served with a 404 status by S3 and CloudFront.
+ *
+ * The assets distribution maps 403/404 to a 200 response with index.html — an
+ * SPA pattern that tells crawlers every missing URL is a valid page. That is
+ * deliberately not copied here.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page doesn't exist."
+  noindex
+>
+  <div class="notfound">
+    <div class="container">
+      <div class="content-panel">
+      <p class="code">404</p>
+      <h1 class="page-title">We can't find that page</h1>
+      <p class="lede">
+        The site was rebuilt recently, so an old link may have moved. These are
+        the main places to look.
+      </p>
+
+      <ul class="links">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a href={`${base}${item.href}`}>
+                {item.label} <Icon name="arrow-right" size="sm" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="help">
+        Still stuck? Ask us on
+        <a
+          href={site.discord.invite}
+          target="_blank"
+          rel="noopener noreferrer">Discord</a
+        > or
+        email <a href={`mailto:${site.emails.enquiries}`}>{site.emails.enquiries}</a>.
+      </p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-block: var(--space-8);
+    text-align: center;
+  }
+
+  .code {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--accent-text);
+    line-height: 1;
+  }
+
+  .lede {
+    margin-inline: auto;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    list-style: none;
+    margin: var(--space-6) 0 0;
+    padding: 0;
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  .links a:hover {
+    border-color: var(--accent-text);
+    color: var(--accent-text);
+  }
+
+  .help {
+    margin-top: var(--space-6);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .help a {
+    color: var(--accent-text);
+  }
+</style>
