@@ -5,8 +5,11 @@ community. Astro static site; production is the existing `awsug.nz` CloudFront
 distribution with the default origin on an S3 site bucket (photos stay on their
 own origin). Infra lives in the `terraform-aws` repo.
 
-Push to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
-`astro build` → `s3 sync` to the site bucket → CloudFront invalidation.
+Push to `main` runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml):
+type-check + build, then (only if that succeeds) the reusable
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) job —
+`astro build` → `s3 sync` → CloudFront invalidation. Manual deploys use
+`workflow_dispatch` on Deploy.
 
 CloudFront keeps `/communitydays/archive/photos*` on the existing photos bucket.
 Cutover (origin swap off GitHub Pages, CoC function fix) is in
@@ -68,7 +71,7 @@ npm run preview    # serve dist/ on port 8001
 | Check | When | What |
 |-------|------|------|
 | `build` | PR + push to `main` | `astro check` + `astro build` |
-| `deploy` | push to `main` | `s3 sync` + CloudFront invalidation (when vars set) |
+| `deploy` | push to `main`, after `build` | reusable Deploy workflow: `s3 sync` + invalidation (when vars set) |
 | Markdown Lint | PR | [actions](https://github.com/aws-user-group-nz/actions) `markdown-lint` |
 | Commit Message Conformance | PR | [actions](https://github.com/aws-user-group-nz/actions) `commitmsg-conform` (skips Dependabot) |
 | Auto-merge | Dependabot PRs | [actions](https://github.com/aws-user-group-nz/actions) `dependabot-auto-merge` |
