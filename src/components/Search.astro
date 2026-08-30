@@ -1,0 +1,466 @@
+---
+/**
+ * Site search via Pagefind (static index under /pagefind/ after build).
+ * Ctrl/Cmd+K or the header button opens a modal; results load in-browser.
+ */
+import Icon from './Icon.astro';
+
+const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pagefind.js`;
+---
+
+<button
+  type="button"
+  class="search-button"
+  data-search-open
+  aria-haspopup="dialog"
+  title="Search (Ctrl K)"
+>
+  <Icon name="search" />
+  <span class="search-button-label">Search</span>
+  <kbd class="search-kbd" data-search-kbd aria-hidden="true">Ctrl K</kbd>
+  <span class="visually-hidden">Open site search</span>
+</button>
+
+<dialog class="search-dialog" data-search-dialog aria-labelledby="search-dialog-title">
+  <div class="search-panel">
+    <div class="search-bar">
+      <Icon name="search" class="search-bar-icon" />
+      <input
+        type="search"
+        class="search-input"
+        data-search-input
+        id="site-search-input"
+        placeholder="Search the site…"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        enterkeyhint="search"
+      />
+      <button type="button" class="search-close" data-search-close aria-label="Close search">
+        <Icon name="close" />
+      </button>
+    </div>
+    <h2 id="search-dialog-title" class="visually-hidden">Site search</h2>
+    <p class="search-status" data-search-status role="status" aria-live="polite"></p>
+    <ul class="search-results" data-search-results></ul>
+  </div>
+</dialog>
+
+<style>
+  .search-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    box-sizing: border-box;
+    min-height: 2.75rem;
+    padding: 0 var(--space-3);
+    border: 1px solid rgb(255 255 255 / 28%);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--header-text);
+    cursor: pointer;
+    flex-shrink: 0;
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition:
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .search-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgb(255 255 255 / 8%);
+  }
+
+  .search-button:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .search-button :global(.icon) {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: currentColor;
+  }
+
+  .search-kbd {
+    display: none;
+    margin: 0;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid rgb(255 255 255 / 28%);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: rgb(255 255 255 / 72%);
+  }
+
+  @media (min-width: 861px) {
+    .search-kbd {
+      display: inline-block;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .search-button {
+      width: 2.75rem;
+      min-width: 2.75rem;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .search-button-label,
+    .search-kbd {
+      display: none;
+    }
+  }
+
+  .search-dialog {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    max-width: none;
+    max-height: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  .search-dialog::backdrop {
+    background: var(--overlay);
+  }
+
+  .search-dialog[open] {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: min(12vh, 5rem) var(--space-4) var(--space-4);
+  }
+
+  .search-panel {
+    width: min(36rem, 100%);
+    max-height: min(80vh, 40rem);
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-bar-icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: var(--text-secondary);
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: var(--text-md);
+    padding: var(--space-2) 0;
+  }
+
+  .search-input:focus {
+    outline: none;
+  }
+
+  .search-input::placeholder {
+    color: var(--text-secondary);
+  }
+
+  .search-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+
+  .search-close:hover {
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+  }
+
+  .search-close:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .search-close :global(.icon) {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: currentColor;
+  }
+
+  .search-status {
+    margin: 0;
+    padding: var(--space-3) var(--space-4) 0;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  .search-status:empty {
+    display: none;
+  }
+
+  .search-results {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2) 0 var(--space-3);
+    overflow: auto;
+  }
+
+  .search-results :global(a) {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    text-decoration: none;
+    color: inherit;
+    border-block: 1px solid transparent;
+  }
+
+  .search-results :global(a:hover),
+  .search-results :global(a:focus-visible) {
+    background: var(--surface-sunken);
+    outline: none;
+  }
+
+  .search-results :global(.search-result-title) {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .search-results :global(.search-result-excerpt) {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  .search-results :global(mark) {
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
+    color: inherit;
+    padding: 0 0.1em;
+    border-radius: 2px;
+  }
+</style>
+
+<script is:inline type="module" define:vars={{ pagefindSrc }}>
+  (function () {
+    var RESULT_LIMIT = 25;
+    var pagefind = null;
+    var loadPromise = null;
+
+    function dialog() {
+      return document.querySelector('[data-search-dialog]');
+    }
+
+    function input() {
+      return document.querySelector('[data-search-input]');
+    }
+
+    function resultsEl() {
+      return document.querySelector('[data-search-results]');
+    }
+
+    function statusEl() {
+      return document.querySelector('[data-search-status]');
+    }
+
+    function applyShortcutHint() {
+      var isApple = /Mac|iPhone|iPad/.test(navigator.platform) || /Mac OS/.test(navigator.userAgent);
+      var hint = isApple ? '\u2318K' : 'Ctrl K';
+      document.querySelectorAll('[data-search-kbd]').forEach(function (kbd) {
+        kbd.textContent = hint;
+      });
+      document.querySelectorAll('[data-search-open]').forEach(function (btn) {
+        btn.title = 'Search (' + hint + ')';
+      });
+    }
+
+    function ensurePagefind() {
+      if (pagefind) return Promise.resolve(pagefind);
+      if (!loadPromise) {
+        loadPromise = import(pagefindSrc)
+          .then(function (mod) {
+            return mod.init().then(function () {
+              pagefind = mod;
+              return mod;
+            });
+          })
+          .catch(function (err) {
+            loadPromise = null;
+            throw err;
+          });
+      }
+      return loadPromise;
+    }
+
+    function setStatus(text) {
+      var el = statusEl();
+      if (el) el.textContent = text;
+    }
+
+    function clearResults() {
+      var list = resultsEl();
+      if (list) list.replaceChildren();
+    }
+
+    function closeSearch() {
+      var d = dialog();
+      if (d instanceof HTMLDialogElement && d.open) d.close();
+    }
+
+    function openSearch() {
+      var d = dialog();
+      var i = input();
+      if (!d || !(d instanceof HTMLDialogElement)) return;
+      if (!d.open) d.showModal();
+      if (i) {
+        i.focus();
+        i.select();
+      }
+      ensurePagefind().catch(function () {});
+    }
+
+    function runSearch(query) {
+      var q = query.trim();
+      clearResults();
+      if (!q) {
+        setStatus('');
+        return;
+      }
+
+      setStatus('Searching\u2026');
+      ensurePagefind()
+        .then(function (pf) {
+          return pf.debouncedSearch(q);
+        })
+        .then(function (search) {
+          if (!search || !search.results) {
+            setStatus('No results.');
+            return;
+          }
+          if (search.results.length === 0) {
+            setStatus('No results.');
+            return;
+          }
+
+          var slice = search.results.slice(0, RESULT_LIMIT);
+          return Promise.all(
+            slice.map(function (r) {
+              return r.data();
+            }),
+          ).then(function (data) {
+            var list = resultsEl();
+            if (!list) return;
+
+            var frag = document.createDocumentFragment();
+            data.forEach(function (item) {
+              var li = document.createElement('li');
+              var a = document.createElement('a');
+              a.href = item.url;
+
+              var title = document.createElement('span');
+              title.className = 'search-result-title';
+              title.textContent = (item.meta && item.meta.title) || item.url;
+
+              var excerpt = document.createElement('span');
+              excerpt.className = 'search-result-excerpt';
+              excerpt.innerHTML = item.excerpt || '';
+
+              a.append(title, excerpt);
+              a.addEventListener('click', closeSearch);
+              li.appendChild(a);
+              frag.appendChild(li);
+            });
+            list.appendChild(frag);
+
+            var more = search.results.length - slice.length;
+            setStatus(
+              more > 0
+                ? 'Showing ' + slice.length + ' of ' + search.results.length + ' results'
+                : search.results.length +
+                    ' result' +
+                    (search.results.length === 1 ? '' : 's'),
+            );
+          });
+        })
+        .catch(function () {
+          setStatus('Search index unavailable. Run a production build first (npm run build).');
+        });
+    }
+
+    if (!globalThis.__awsugSearchBound) {
+      globalThis.__awsugSearchBound = true;
+
+      document.addEventListener('click', function (event) {
+        var t = event.target;
+        if (!(t instanceof Element)) return;
+        if (t.closest('[data-search-open]')) {
+          openSearch();
+          return;
+        }
+        if (t.closest('[data-search-close]')) closeSearch();
+      });
+
+      document.addEventListener('keydown', function (event) {
+        var metaK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
+        if (metaK) {
+          event.preventDefault();
+          var d = dialog();
+          if (d instanceof HTMLDialogElement && d.open) closeSearch();
+          else openSearch();
+          return;
+        }
+        if (event.key === 'Escape') {
+          var d2 = dialog();
+          if (d2 instanceof HTMLDialogElement && d2.open) {
+            event.preventDefault();
+            closeSearch();
+          }
+        }
+      });
+
+      document.addEventListener('input', function (event) {
+        var t = event.target;
+        if (!(t instanceof HTMLInputElement) || !t.matches('[data-search-input]')) return;
+        runSearch(t.value);
+      });
+
+      document.addEventListener('astro:page-load', function () {
+        applyShortcutHint();
+        var d = dialog();
+        if (d instanceof HTMLDialogElement && d.open) closeSearch();
+      });
+    }
+
+    applyShortcutHint();
+  })();
+</script>
