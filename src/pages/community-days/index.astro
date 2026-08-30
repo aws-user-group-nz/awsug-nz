@@ -34,7 +34,9 @@ const years = [manifest2025, manifest2024, manifest2023].map((manifest) => ({
         <h2 class="section-title" id="our-events">Our events</h2>
         <ul class="grid grid-auto event-cards">
           {
-            site.relatedSites.map((event) => (
+            site.relatedSites
+              .filter((event) => !('internal' in event && event.internal))
+              .map((event) => (
               <li>
                 <a
                   class="card card-link"

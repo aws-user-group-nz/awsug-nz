@@ -34,17 +34,21 @@ const year = new Date().getFullYear();
       <h2 class="footer-heading">Community Days</h2>
       <ul>
         {
-          site.relatedSites.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
+          site.relatedSites.map((item) => {
+            const internal = 'internal' in item && item.internal === true;
+            const href = internal ? `${base}${item.href}` : item.href;
+            return (
+              <li>
+                {internal ? (
+                  <a href={href}>{item.label}</a>
+                ) : (
+                  <a href={href} target="_blank" rel="noopener noreferrer">
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            );
+          })
         }
       </ul>
     </nav>
