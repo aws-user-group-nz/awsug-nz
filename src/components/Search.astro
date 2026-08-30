@@ -5,7 +5,9 @@
  */
 import Icon from './Icon.astro';
 
-const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pagefind.js`;
+const pagefindBase = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind`;
+const pagefindSrc = `${pagefindBase}/pagefind.js`;
+const pdfPagesSrc = `${pagefindBase}/pdf-pages.json`;
 ---
 
 <button
@@ -285,11 +287,14 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
   }
 </style>
 
-<script is:inline type="module" define:vars={{ pagefindSrc }}>
+<script is:inline type="module" define:vars={{ pagefindSrc, pdfPagesSrc }}>
   (function () {
     var RESULT_LIMIT = 25;
     var pagefind = null;
     var loadPromise = null;
+    /** @type {Record<string, string> | null} */
+    var pdfPages = null;
+    var pdfPagesPromise = null;
 
     function dialog() {
       return document.querySelector('[data-search-dialog]');
@@ -348,6 +353,71 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
       return /\.pdf($|\?)/i.test(item.url || '');
     }
 
+    function ensurePdfPages() {
+      if (pdfPages) return Promise.resolve(pdfPages);
+      if (!pdfPagesPromise) {
+        pdfPagesPromise = fetch(pdfPagesSrc)
+          .then(function (res) {
+            return res.ok ? res.json() : {};
+          })
+          .then(function (data) {
+            pdfPages = data && typeof data === 'object' ? data : {};
+            return pdfPages;
+          })
+          .catch(function () {
+            pdfPages = {};
+            return pdfPages;
+          });
+      }
+      return pdfPagesPromise;
+    }
+
+    function prepareResults(items, routes) {
+      var prepared = items.map(function (item) {
+        var fromPdf = isPdfResult(item);
+        var href = fromPdf && routes[item.url] ? routes[item.url] : item.url;
+        var opensFile = /\.pdf($|\?)/i.test(href);
+        return {
+          item: item,
+          href: href,
+          fromPdf: fromPdf,
+          opensFile: opensFile,
+          title: (item.meta && item.meta.title) || titleFromUrl(fromPdf ? item.url : href),
+          excerpt: item.excerpt || '',
+        };
+      });
+
+      // One row per destination: keep PDF-backed hit when both page + PDF match.
+      var byHref = new Map();
+      prepared.forEach(function (row) {
+        var prev = byHref.get(row.href);
+        if (!prev) {
+          byHref.set(row.href, row);
+          return;
+        }
+        if (row.fromPdf) {
+          byHref.set(row.href, {
+            item: row.item,
+            href: row.href,
+            fromPdf: true,
+            opensFile: row.opensFile,
+            title: prev.title || row.title,
+            excerpt: row.excerpt || prev.excerpt,
+          });
+        } else if (prev.fromPdf) {
+          byHref.set(row.href, {
+            item: prev.item,
+            href: prev.href,
+            fromPdf: true,
+            opensFile: prev.opensFile,
+            title: row.title || prev.title,
+            excerpt: prev.excerpt || row.excerpt,
+          });
+        }
+      });
+      return Array.from(byHref.values());
+    }
+
     function ensurePagefind() {
       if (pagefind) return Promise.resolve(pagefind);
       if (!loadPromise) {
@@ -391,6 +461,7 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
         i.select();
       }
       ensurePagefind().catch(function () {});
+      ensurePdfPages();
     }
 
     function runSearch(query) {
@@ -402,11 +473,17 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
       }
 
       setStatus('Searching\u2026');
-      ensurePagefind()
-        .then(function (pf) {
-          return pf.debouncedSearch(q);
+      Promise.all([ensurePagefind(), ensurePdfPages()])
+        .then(function (parts) {
+          var pf = parts[0];
+          var routes = parts[1];
+          return pf.debouncedSearch(q).then(function (search) {
+            return { search: search, routes: routes };
+          });
         })
-        .then(function (search) {
+        .then(function (payload) {
+          var search = payload.search;
+          var routes = payload.routes;
           if (!search || !search.results) {
             setStatus('No results.');
             return;
@@ -425,13 +502,13 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
             var list = resultsEl();
             if (!list) return;
 
+            var rows = prepareResults(data, routes);
             var frag = document.createDocumentFragment();
-            data.forEach(function (item) {
+            rows.forEach(function (row) {
               var li = document.createElement('li');
               var a = document.createElement('a');
-              a.href = item.url;
-              var pdf = isPdfResult(item);
-              if (pdf) {
+              a.href = row.href;
+              if (row.opensFile) {
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
               }
@@ -439,10 +516,9 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
               var title = document.createElement('span');
               title.className = 'search-result-title';
               var titleText = document.createElement('span');
-              titleText.textContent =
-                (item.meta && item.meta.title) || titleFromUrl(item.url);
+              titleText.textContent = row.title;
               title.appendChild(titleText);
-              if (pdf) {
+              if (row.fromPdf) {
                 var badge = document.createElement('span');
                 badge.className = 'search-result-badge';
                 badge.textContent = 'PDF';
@@ -451,7 +527,7 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
 
               var excerpt = document.createElement('span');
               excerpt.className = 'search-result-excerpt';
-              excerpt.innerHTML = item.excerpt || '';
+              excerpt.innerHTML = row.excerpt;
 
               a.append(title, excerpt);
               a.addEventListener('click', closeSearch);
@@ -463,10 +539,8 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
             var more = search.results.length - slice.length;
             setStatus(
               more > 0
-                ? 'Showing ' + slice.length + ' of ' + search.results.length + ' results'
-                : search.results.length +
-                    ' result' +
-                    (search.results.length === 1 ? '' : 's'),
+                ? 'Showing ' + rows.length + ' of ' + search.results.length + ' results'
+                : rows.length + ' result' + (rows.length === 1 ? '' : 's'),
             );
           });
         })

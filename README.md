@@ -62,6 +62,8 @@ npm run preview    # serve dist/ on port 8001
 Site search (header / Ctrl+K) needs the Pagefind index from `npm run build`;
 `astro dev` alone will not have search results until you build once. PDFs under
 `public/` (copied into `dist/`) are indexed automatically — no per-file config.
+Search opens the HTML page that embeds the PDF when one exists; otherwise the
+file itself.
 
 | Script | What it does |
 | --- | --- |

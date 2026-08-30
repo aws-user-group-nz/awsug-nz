@@ -4,10 +4,12 @@
  * - Indexes all HTML under dist/ (honours data-pagefind-body / ignore)
  * - Dynamically finds every *.pdf under dist/, extracts text, and adds a
  *   custom record so PDF body content is searchable without per-file config
+ * - Writes pdf-pages.json so search can open the wrapping HTML page (not the
+ *   raw file) when a page in dist links to that PDF
  */
 import { createIndex } from 'pagefind';
 import { extractText, getDocumentProxy } from 'unpdf';
-import { readdir, readFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -16,7 +18,7 @@ const distDir = path.join(root, 'dist');
 const language = 'en-nz';
 
 /** @param {string} dir */
-async function listPdfs(dir) {
+async function listFiles(dir, predicate) {
   /** @type {string[]} */
   const out = [];
   /** @param {string} current */
@@ -27,7 +29,7 @@ async function listPdfs(dir) {
       if (entry.isDirectory()) {
         if (entry.name === 'pagefind') continue;
         await walk(full);
-      } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.pdf')) {
+      } else if (entry.isFile() && predicate(entry.name, full)) {
         out.push(full);
       }
     }
@@ -55,6 +57,64 @@ function urlFromPdfPath(filePath) {
   return `/${rel}`;
 }
 
+/** @param {string} htmlPath */
+function urlFromHtmlPath(htmlPath) {
+  let rel = path.relative(distDir, htmlPath).split(path.sep).join('/');
+  if (rel.endsWith('/index.html')) rel = rel.slice(0, -'/index.html'.length);
+  else if (rel.endsWith('.html')) rel = rel.slice(0, -'.html'.length);
+  if (rel === 'index' || rel === '') return '/';
+  return `/${rel}/`.replace(/\/{2,}/g, '/');
+}
+
+/** @param {string} href */
+function normalizePdfHref(href) {
+  try {
+    const url = new URL(href, 'https://awsug.nz');
+    return url.pathname;
+  } catch {
+    return href.startsWith('/') ? href.split('?')[0] : `/${href.split('?')[0]}`;
+  }
+}
+
+/**
+ * First HTML page in dist that links to each PDF wins.
+ * @returns {Promise<Record<string, string>>} pdfUrl → pageUrl
+ */
+async function buildPdfPageMap() {
+  /** @type {Record<string, string>} */
+  const map = {};
+  const htmlFiles = await listFiles(distDir, (name) => name.endsWith('.html'));
+  for (const htmlPath of htmlFiles) {
+    const html = await readFile(htmlPath, 'utf8');
+    const pageUrl = urlFromHtmlPath(htmlPath);
+    for (const match of html.matchAll(/\b(?:href|src)=["']([^"']+\.pdf)(?:#[^"']*)?["']/gi)) {
+      const pdfUrl = normalizePdfHref(match[1]);
+      if (!map[pdfUrl]) map[pdfUrl] = pageUrl;
+    }
+  }
+  return map;
+}
+
+/** @param {string} htmlPath */
+async function titleFromHtmlPath(htmlPath) {
+  const html = await readFile(htmlPath, 'utf8');
+  const h1 = html.match(/<h1[^>]*class="[^"]*page-title[^"]*"[^>]*>([^<]+)<\/h1>/i)
+    || html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+  if (h1?.[1]) return h1[1].trim();
+  const title = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+  if (title?.[1]) {
+    return title[1].split('|')[0].trim();
+  }
+  return null;
+}
+
+/** @param {string} pageUrl */
+function htmlPathFromPageUrl(pageUrl) {
+  if (pageUrl === '/') return path.join(distDir, 'index.html');
+  const trimmed = pageUrl.replace(/\/$/, '').replace(/^\//, '');
+  return path.join(distDir, trimmed, 'index.html');
+}
+
 async function main() {
   const { errors: createErrors, index } = await createIndex();
   if (!index) {
@@ -70,7 +130,8 @@ async function main() {
     process.exit(1);
   }
 
-  const pdfs = await listPdfs(distDir);
+  const pdfPageMap = await buildPdfPageMap();
+  const pdfs = await listFiles(distDir, (name) => name.toLowerCase().endsWith('.pdf'));
   let pdfCount = 0;
   for (const filePath of pdfs) {
     const bytes = new Uint8Array(await readFile(filePath));
@@ -84,10 +145,18 @@ async function main() {
       continue;
     }
 
-    const url = urlFromPdfPath(filePath);
-    const title = titleFromPdfPath(filePath);
+    const pdfUrl = urlFromPdfPath(filePath);
+    const pageUrl = pdfPageMap[pdfUrl];
+    let title = titleFromPdfPath(filePath);
+    if (pageUrl) {
+      const pageTitle = await titleFromHtmlPath(htmlPathFromPageUrl(pageUrl));
+      if (pageTitle) title = pageTitle;
+    }
+
+    // Keep the PDF URL in the index (unique record). Search UI rewrites to the
+    // wrapping page via pdf-pages.json when one exists.
     const { errors } = await index.addCustomRecord({
-      url,
+      url: pdfUrl,
       content,
       language,
       meta: {
@@ -96,23 +165,34 @@ async function main() {
       },
     });
     if (errors?.length) {
-      console.error(`Failed to index ${url}:`, errors);
+      console.error(`Failed to index ${pdfUrl}:`, errors);
       process.exit(1);
     }
     pdfCount += 1;
-    console.log(`Indexed PDF ${url} (${title})`);
+    console.log(
+      pageUrl
+        ? `Indexed PDF ${pdfUrl} → ${pageUrl} (${title})`
+        : `Indexed PDF ${pdfUrl} (${title}, no HTML page)`,
+    );
   }
 
+  const pagefindDir = path.join(distDir, 'pagefind');
   const { errors: writeErrors } = await index.writeFiles({
-    outputPath: path.join(distDir, 'pagefind'),
+    outputPath: pagefindDir,
   });
   if (writeErrors?.length) {
     console.error('Pagefind write errors:', writeErrors);
     process.exit(1);
   }
 
+  await writeFile(
+    path.join(pagefindDir, 'pdf-pages.json'),
+    `${JSON.stringify(pdfPageMap, null, 2)}\n`,
+    'utf8',
+  );
+
   console.log(
-    `Pagefind index written to dist/pagefind (${pageCount ?? 0} HTML pages, ${pdfCount} PDFs)`,
+    `Pagefind index written to dist/pagefind (${pageCount ?? 0} HTML pages, ${pdfCount} PDFs, ${Object.keys(pdfPageMap).length} PDF→page routes)`,
   );
 }
 
