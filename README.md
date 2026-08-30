@@ -18,15 +18,16 @@ Cutover (origin swap off GitHub Pages, CoC function fix) is in
 ## Deploy configuration
 
 Infra (bucket + OIDC role) is in `terraform-aws`. Set these repository
-**variables** on this repo (no secrets required for account id):
+**variables** on this repo (no secrets required for account id). Examples are
+placeholders — use the real values from your AWS account / CloudFront console:
 
 | Variable | Example |
 | ---------- | --------- |
-| `AWS_ACCOUNT_ID` | `161492946389` |
+| `AWS_ACCOUNT_ID` | `123456789012` |
 | `AWS_REGION` | `ap-southeast-6` |
 | `OIDC_ROLE_NAME` | `awsug-nz-site-oidc` |
 | `SITE_BUCKET` | `awsug.nz` |
-| `CLOUDFRONT_DISTRIBUTION_ID` | `E365KNSSE8FOMC` |
+| `CLOUDFRONT_DISTRIBUTION_ID` | `E1234567890AB` |
 
 Until `OIDC_ROLE_NAME`, `SITE_BUCKET`, and `AWS_ACCOUNT_ID` are set, deploy skips.
 
