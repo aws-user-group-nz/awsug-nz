@@ -16,61 +16,6 @@
       "online": false,
       "url": "https://www.meetup.com/AWS_NZ",
       "source": "meetup"
-    },
-    {
-      "id": "discord-2026-08-13-wellington",
-      "title": "Wellington meetup — Cost optimisation clinic",
-      "start": "2026-08-13T17:30:00+12:00",
-      "end": "2026-08-13T20:00:00+12:00",
-      "description": "Bring your bill. We'll walk through Cost Explorer, Savings Plans and the traps that quietly cost the most.",
-      "location": "Xero, 20 Customhouse Quay, Wellington",
-      "online": false,
-      "url": "https://www.meetup.com/Amazon-Web-Services-Wellington-User-Group/",
-      "source": "meetup"
-    },
-    {
-      "id": "discord-2026-08-19-study",
-      "title": "Solutions Architect Associate study group",
-      "start": "2026-08-19T19:00:00+12:00",
-      "end": "2026-08-19T20:30:00+12:00",
-      "description": "Weekly study group working through the SAA-C03 exam guide. Drop in on Discord voice.",
-      "location": "Discord",
-      "online": true,
-      "url": "https://discord.gg/4UJfJ755T8",
-      "source": "discord"
-    },
-    {
-      "id": "twitch-2026-08-21-buildon",
-      "title": "AWS on Air — What's new in serverless",
-      "start": "2026-08-21T10:00:00+12:00",
-      "end": "2026-08-21T11:00:00+12:00",
-      "description": "AWS streams a rundown of recent serverless launches.",
-      "location": "Twitch",
-      "online": true,
-      "url": "https://www.twitch.tv/aws",
-      "source": "twitch"
-    },
-    {
-      "id": "meetup-2026-09-03-christchurch",
-      "title": "Christchurch meetup — Networking deep dive",
-      "start": "2026-09-03T17:30:00+12:00",
-      "end": "2026-09-03T20:00:00+12:00",
-      "description": "VPC design, Transit Gateway and the bits of PrivateLink everyone gets wrong the first time.",
-      "location": "Christchurch — venue on Discord",
-      "online": false,
-      "url": "https://www.meetup.com/Christchurch-Amazon-Web-Services-Meetup",
-      "source": "meetup"
-    },
-    {
-      "id": "discord-2026-09-10-northland",
-      "title": "Northland meetup — Getting started on AWS",
-      "start": "2026-09-10T17:30:00+12:00",
-      "end": "2026-09-10T19:30:00+12:00",
-      "description": "An intro session for people new to AWS, aimed squarely at beginners.",
-      "location": "Whangārei — venue on Discord",
-      "online": false,
-      "url": null,
-      "source": "meetup"
     }
   ]
 }

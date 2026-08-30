@@ -644,77 +644,87 @@
       {
         "name": "Tom Cully",
         "linkedin": "https://www.linkedin.com/in/tomcully/",
-        "role": "Founder"
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Scott Patterson",
         "photo": "scott-patterson.jpg",
         "linkedin": "https://www.linkedin.com/in/snpatterson/",
-        "role": "Co-Founder"
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Sebastian Krueger",
         "photo": "sebastian-krueger.jpg",
         "linkedin": "https://www.linkedin.com/in/sebastiankrueger/",
-        "role": "President"
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Steven Arnold Ensslen",
         "photo": "steven-ensslen.jpg",
         "linkedin": "https://www.linkedin.com/in/steven-ensslen-01b87018/",
-        "role": "Treasurer"
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Gleidson Nascimento",
         "photo": "gleidson-nascimento.jpg",
         "linkedin": "https://www.linkedin.com/in/gleidsonnascimento/",
-        "role": "Wellington AWS UG Leader"
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Adarsh Jupidi",
         "photo": "adarsh-jupidi.jpg",
-        "linkedin": "https://www.linkedin.com/in/jcadarsh/"
+        "linkedin": "https://www.linkedin.com/in/jcadarsh/",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Alkaif Khan",
-        "linkedin": "https://www.linkedin.com/in/alkaif/"
+        "linkedin": "https://www.linkedin.com/in/alkaif/",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Carlos Reyneke",
         "photo": "carlos-reyneke.jpg",
-        "linkedin": "https://www.linkedin.com/in/carlos-reyneke-636037108/"
+        "linkedin": "https://www.linkedin.com/in/carlos-reyneke-636037108/",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Charlene Leong",
         "photo": "charlene-leong.jpg",
-        "linkedin": "https://www.linkedin.com/in/charleneleong/"
+        "linkedin": "https://www.linkedin.com/in/charleneleong/",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Chris Martin Watson",
         "photo": "chris-watson.jpg",
-        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/"
+        "linkedin": "https://www.linkedin.com/in/christopher-watson-a0077526/",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Daniel Surendran",
         "photo": "daniel-surendran.jpg",
-        "linkedin": "https://www.linkedin.com/in/danielvijay/"
+        "linkedin": "https://www.linkedin.com/in/danielvijay/",
+        "role": "Inc Soc Founder"
       },
       {
-        "name": "Jack Reyneke"
+        "name": "Jack Reyneke",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Lynda Bushe",
-        "linkedin": "https://www.linkedin.com/in/lyndabushe/"
+        "linkedin": "https://www.linkedin.com/in/lyndabushe/",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Paul Dunlop",
         "photo": "paul-dunlop.jpg",
-        "linkedin": "https://www.linkedin.com/in/pauldunlopnz"
+        "linkedin": "https://www.linkedin.com/in/pauldunlopnz",
+        "role": "Inc Soc Founder"
       },
       {
         "name": "Sai Honig",
         "photo": "sai-honig.jpg",
-        "linkedin": "https://www.linkedin.com/in/saihonig/"
+        "linkedin": "https://www.linkedin.com/in/saihonig/",
+        "role": "Inc Soc Founder"
       }
     ]
   }
