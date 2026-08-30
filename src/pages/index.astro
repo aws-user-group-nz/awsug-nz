@@ -1,0 +1,176 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import EventList from '../components/EventList.astro';
+import DiscordPanel from '../components/DiscordPanel.astro';
+import NewsList from '../components/NewsList.astro';
+import SponsorGrid from '../components/SponsorGrid.astro';
+import Icon from '../components/Icon.astro';
+import site from '../data/site.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const news = (await getCollection('news'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const meetups = (await getCollection('meetups')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout title={site.shortName} description={site.description}>
+  <Hero
+    title="AWS User Group Aotearoa"
+    subtitle="Free, volunteer-run AWS meetups and events across New Zealand. Everyone is welcome — whatever you know already."
+    animated
+  >
+    <a
+      class="btn btn-primary"
+      href={site.discord.invite}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Icon name="discord" size="sm" /> Join our Discord
+    </a>
+    <a class="btn btn-outline" href={`${base}/events`}>
+      <Icon name="calendar" size="sm" /> Upcoming events
+    </a>
+  </Hero>
+
+  <section class="band band-surface">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">What's coming up</h2>
+        <a class="section-link" href={`${base}/events`}>
+          Full calendar <Icon name="arrow-right" size="sm" />
+        </a>
+      </div>
+      <EventList limit={3} />
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <DiscordPanel />
+    </div>
+  </section>
+
+  <section class="band band-surface">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Meetups near you</h2>
+        <a class="section-link" href={`${base}/meetups`}>
+          All meetups <Icon name="arrow-right" size="sm" />
+        </a>
+      </div>
+      <ul class="meetup-chips">
+        {
+          meetups.map((meetup) => (
+            <li>
+              <a href={`${base}/meetups/${meetup.id}`}>
+                <Icon name="location" size="sm" />
+                {meetup.data.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Latest news</h2>
+        <a class="section-link" href={`${base}/news`}>
+          All news <Icon name="arrow-right" size="sm" />
+        </a>
+      </div>
+      <NewsList items={news} />
+    </div>
+  </section>
+
+  <section class="band band-surface">
+    <div class="container">
+      <h2 class="section-title section-title-center">Our sponsors</h2>
+      <p class="sponsor-intro">
+        Our sponsors cover the venues and food that make free community events
+        possible.
+      </p>
+      <SponsorGrid />
+      <p class="sponsor-cta">
+        <a class="btn btn-outline" href={`${base}/sponsors`}>
+          Sponsorship options
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--accent-text);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    margin-bottom: var(--space-6);
+  }
+
+  .section-link:hover {
+    text-decoration: underline;
+  }
+
+  .meetup-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .meetup-chips a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    font-weight: 500;
+    transition:
+      border-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .meetup-chips a:hover {
+    border-color: var(--accent-text);
+    color: var(--accent-text);
+  }
+
+  .sponsor-intro {
+    text-align: center;
+    color: var(--text-secondary);
+    max-width: 55ch;
+    margin: calc(-1 * var(--space-3)) auto var(--space-6);
+  }
+
+  .sponsor-cta {
+    text-align: center;
+    margin-top: var(--space-7);
+  }
+</style>

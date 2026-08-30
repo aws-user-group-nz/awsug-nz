@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsList from '../../components/NewsList.astro';
+
+const news = (await getCollection('news')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<BaseLayout
+  title="News"
+  description="Announcements and updates from AWS User Group Aotearoa."
+  ogImage="news.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+      <h1 class="page-title">News</h1>
+      <p class="lede">Announcements and updates from the society.</p>
+      <div class="list">
+        <NewsList items={news} headingLevel="h2" />
+      </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .list {
+    margin-top: var(--space-6);
+  }
+</style>

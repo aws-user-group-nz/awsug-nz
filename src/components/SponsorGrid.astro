@@ -1,0 +1,215 @@
+---
+import sponsors from '../data/sponsors.json';
+
+interface Props {
+  /** Restrict to specific tier ids; defaults to every tier that has sponsors. */
+  tiers?: string[];
+  headingLevel?: 'h2' | 'h3';
+  /**
+   * Lazy-load the logos. Correct when the grid sits below the fold (the home
+   * page), wrong on the sponsors page where the grid is the main content and
+   * deferring it would delay the largest contentful paint.
+   */
+  lazy?: boolean;
+}
+
+const { tiers, headingLevel = 'h2', lazy = true } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const visible = sponsors.tiers.filter(
+  (tier) =>
+    tier.sponsors.length > 0 && (tiers === undefined || tiers.includes(tier.id))
+);
+
+const Heading = headingLevel;
+
+/** Oceania-style "Platinum Sponsors"; skip doubling if the name already says it. */
+function tierHeading(name: string): string {
+  return /sponsor/i.test(name) ? name : `${name} Sponsors`;
+}
+---
+
+{
+  visible.map((tier) => (
+    <section class={`tier-group tier-${tier.id}`}>
+      <Heading class="tier-title">{tierHeading(tier.name)}</Heading>
+      <ul class="sponsor-grid">
+        {tier.sponsors.map((sponsor) => (
+          <li>
+            <a
+              class={`sponsor-card tier-${tier.id}`}
+              href={sponsor.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`${sponsor.name} (${tier.name})`}
+            >
+              <img
+                src={`${base}/logos/sponsors/${sponsor.logo}`}
+                alt={sponsor.name}
+                loading={lazy ? 'lazy' : 'eager'}
+                decoding="async"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))
+}
+
+<style>
+  /*
+    Tier panels use the same surface/border tokens as `.card` (Events), so
+    dark mode reads as raised plates on the sunken page. Logo tiles stay white.
+  */
+  .tier-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tier-group + .tier-group {
+    margin-top: var(--space-5);
+  }
+
+  .tier-title {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-base);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+    text-align: left;
+  }
+
+  .sponsor-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sponsor-card {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Fixed footprint — every tier, every logo, same box. */
+    width: 250px;
+    height: 130px;
+    padding: 0.75rem;
+    background: var(--white);
+    border: 1px solid rgb(0 0 0 / 6%);
+    border-top: 4px solid var(--tier-accent, var(--border-strong));
+    border-radius: var(--radius-md);
+    box-shadow:
+      var(--shadow-sm),
+      0 10px 25px var(--tier-glow, transparent);
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .sponsor-card.tier-platinum {
+    --tier-accent: #bfc7d5;
+    --tier-glow: rgb(191 199 213 / 15%);
+  }
+
+  .sponsor-card.tier-gold {
+    --tier-accent: #f5b700;
+    --tier-glow: rgb(245 183 0 / 16%);
+  }
+
+  .sponsor-card.tier-silver {
+    --tier-accent: #b0b7c3;
+    --tier-glow: rgb(176 183 195 / 14%);
+  }
+
+  .sponsor-card.tier-community {
+    --tier-accent: #7dcea0;
+    --tier-glow: rgb(125 206 160 / 16%);
+  }
+
+  .sponsor-card.tier-bronze {
+    --tier-accent: #c47a45;
+    --tier-glow: rgb(196 122 69 / 16%);
+  }
+
+  .sponsor-card.tier-friends {
+    --tier-accent: var(--orange-500);
+    --tier-glow: rgb(255 153 0 / 16%);
+  }
+
+  .sponsor-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+      var(--shadow-md),
+      0 14px 30px var(--tier-glow, transparent);
+  }
+
+  .sponsor-card:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  .sponsor-card img {
+    display: block;
+    width: 88%;
+    height: 78%;
+    max-width: 88%;
+    max-height: 78%;
+    object-fit: contain;
+    transition:
+      transform var(--transition-fast),
+      filter var(--transition-fast);
+  }
+
+  .sponsor-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.08) saturate(1.1);
+  }
+
+  /*
+    Dark mode keeps a white logo plate. Our sponsor assets are light-surface
+    marks (dark Datacom/Deloitte/MongoDB/AWS wordmarks). Oceania's navy tile
+    only works with light-on-dark logo variants we do not have.
+  */
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .sponsor-card {
+      background: var(--white);
+      border-color: rgb(255 255 255 / 14%);
+      box-shadow:
+        0 4px 14px rgb(0 0 0 / 35%),
+        0 10px 25px var(--tier-glow, transparent);
+    }
+  }
+
+  :global([data-theme='dark']) .sponsor-card {
+    background: var(--white);
+    border-color: rgb(255 255 255 / 14%);
+    box-shadow:
+      0 4px 14px rgb(0 0 0 / 35%),
+      0 10px 25px var(--tier-glow, transparent);
+  }
+
+  :global([data-theme='light']) .sponsor-card {
+    background: var(--white);
+    border-color: rgb(0 0 0 / 6%);
+  }
+
+  @media (max-width: 400px) {
+    .sponsor-card {
+      width: min(250px, 100%);
+    }
+
+    .sponsor-grid {
+      gap: var(--space-4);
+    }
+  }
+</style>

@@ -1,0 +1,74 @@
+{
+  "packUrl": "/sponsorship-pack",
+  "tiers": [
+    {
+      "id": "platinum",
+      "name": "Platinum",
+      "sponsors": [
+        {
+          "name": "AWS",
+          "logo": "AWS_logo_RGB.svg",
+          "url": "https://aws.amazon.com/"
+        }
+      ]
+    },
+    {
+      "id": "gold",
+      "name": "Gold",
+      "sponsors": [
+        {
+          "name": "Datacom",
+          "logo": "Datacom-Primary-Logo-RGB.svg",
+          "url": "https://datacom.com/"
+        },
+        {
+          "name": "Deloitte",
+          "logo": "DEL_PRI_RGB.png",
+          "url": "https://www.deloitte.com/nz/"
+        }
+      ]
+    },
+    {
+      "id": "silver",
+      "name": "Silver",
+      "sponsors": [
+        {
+          "name": "Mantel",
+          "logo": "Mantel-Logo-Positive.png",
+          "url": "https://mantelgroup.com.au/"
+        },
+        {
+          "name": "CyberCX",
+          "logo": "CyberCX_logo_RGB-small.png",
+          "url": "https://cybercx.co.nz/"
+        },
+        {
+          "name": "MongoDB",
+          "logo": "MongoDB_ForestGreen.png",
+          "url": "https://www.mongodb.com/"
+        }
+      ]
+    },
+    {
+      "id": "community",
+      "name": "Community Partner",
+      "sponsors": [
+        {
+          "name": "Feedback Feijoa",
+          "logo": "feedback-feijoa.png",
+          "url": "https://www.feedbackfeijoa.com/"
+        }
+      ]
+    },
+    {
+      "id": "bronze",
+      "name": "Bronze",
+      "sponsors": []
+    },
+    {
+      "id": "friends",
+      "name": "Friends of AWSUG",
+      "sponsors": []
+    }
+  ]
+}

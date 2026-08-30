@@ -1,0 +1,28 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PdfEmbed from '../components/PdfEmbed.astro';
+
+const page = await getEntry('pages', 'constitution');
+if (!page) throw new Error('Missing content/pages/constitution.md');
+const { Content } = await render(page);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pdfHref = `${base}/docs/awsugnz-constitution-2026-02.pdf`;
+---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  ogImage={page.data.ogImage ?? 'about.png'}
+>
+  <PdfEmbed
+    title={page.data.title}
+    lede={page.data.lede}
+    pdfHref={pdfHref}
+    iframeTitle="AWSUG Aotearoa constitution February 2026 (PDF)"
+    downloadLabel="Open or download constitution (PDF)"
+  >
+    <Content />
+  </PdfEmbed>
+</BaseLayout>

@@ -1,0 +1,284 @@
+---
+import site from '../data/site.json';
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const path = Astro.url.pathname.replace(base, '') || '/';
+
+function isCurrent(href: string) {
+  if (href === '/') return path === '/';
+  return path === href || path.startsWith(`${href}/`);
+}
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href={`${base}/`} class="brand">
+      <img
+        src={`${base}/logos/awsug-aotearoa-on-dark.png`}
+        alt={site.legalName}
+        width="530"
+        height="344"
+        class="brand-logo"
+      />
+    </a>
+
+    <div class="header-actions">
+      <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+        <ul>
+          {
+            site.nav.map((item) => (
+              <li>
+                <a
+                  href={`${base}${item.href}`}
+                  aria-current={isCurrent(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <ThemeToggle />
+
+      <button
+        type="button"
+        class="menu-button"
+        data-menu-button
+        aria-expanded="false"
+        aria-controls="primary-nav"
+      >
+        <Icon name="menu" class="menu-icon-open" />
+        <Icon name="close" class="menu-icon-close" />
+        <span class="visually-hidden">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    min-height: var(--header-height);
+    display: flex;
+    align-items: center;
+    background: var(--header-bg);
+    color: var(--header-text);
+    box-shadow: var(--shadow-md);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding-block: var(--space-2);
+  }
+
+  .brand-logo {
+    height: 56px;
+    width: auto;
+    aspect-ratio: 530 / 344;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-shrink: 0;
+  }
+
+  .primary-nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .primary-nav a {
+    position: relative;
+    text-decoration: none;
+    font-weight: 500;
+    padding-block: var(--space-2);
+    white-space: nowrap;
+    /* Colour only — never weight/size, which reflows siblings. */
+    transition: color var(--transition-fast);
+  }
+
+  .primary-nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: transparent;
+  }
+
+  .primary-nav a:hover {
+    color: var(--accent);
+  }
+
+  .primary-nav a[aria-current='page'] {
+    color: var(--accent);
+  }
+
+  .primary-nav a[aria-current='page']::after {
+    background: var(--accent);
+  }
+
+  /* Avoid the global outline-offset “bloom” on click — reads as a sideways twitch. */
+  .primary-nav a:focus-visible {
+    outline: none;
+    color: var(--accent);
+  }
+
+  .primary-nav a:focus-visible::after {
+    background: var(--accent);
+  }
+
+  .menu-button {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid rgb(255 255 255 / 20%);
+    border-radius: var(--radius-sm);
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .menu-button:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .menu-icon-close {
+    display: none;
+  }
+
+  .menu-button[aria-expanded='true'] .menu-icon-close {
+    display: block;
+  }
+
+  .menu-button[aria-expanded='true'] .menu-icon-open {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .menu-button {
+      display: inline-flex;
+    }
+
+    .brand-logo {
+      height: 44px;
+    }
+
+    .primary-nav {
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      background: var(--header-bg);
+      border-top: 1px solid rgb(255 255 255 / 10%);
+      box-shadow: var(--shadow-lg);
+      display: none;
+    }
+
+    .primary-nav[data-open='true'] {
+      display: block;
+    }
+
+    .primary-nav ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: var(--space-2) var(--space-4) var(--space-4);
+    }
+
+    .primary-nav a {
+      display: block;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid rgb(255 255 255 / 10%);
+    }
+
+    .primary-nav a::after {
+      display: none;
+    }
+
+    .primary-nav a[aria-current='page'] {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+  }
+</style>
+
+<script>
+  function bindMobileMenu() {
+    const button = document.querySelector<HTMLButtonElement>('[data-menu-button]');
+    const nav = document.getElementById('primary-nav');
+    if (!button || !nav || button.dataset.menuBound === 'true') return;
+    button.dataset.menuBound = 'true';
+
+    const setOpen = (open: boolean) => {
+      button.setAttribute('aria-expanded', String(open));
+      nav.dataset.open = String(open);
+    };
+
+    button.addEventListener('click', () => {
+      setOpen(button.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Escape closes the menu and returns focus to the control that opened it.
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        button.focus();
+      }
+    });
+
+    // After choosing a nav link, close the drawer so the next page starts clean.
+    nav.addEventListener('click', (event) => {
+      const link = (event.target as Element | null)?.closest?.('a');
+      if (!link || button.getAttribute('aria-expanded') !== 'true') return;
+      setOpen(false);
+    });
+
+    // Reset state when resizing back up to the desktop layout, otherwise the
+    // nav can stay hidden behind a stale data-open="false".
+    const desktop = window.matchMedia('(min-width: 861px)');
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+
+  bindMobileMenu();
+  document.addEventListener('astro:page-load', () => {
+    bindMobileMenu();
+    // Close the drawer after an in-app navigation on small screens.
+    const button = document.querySelector<HTMLButtonElement>('[data-menu-button]');
+    const nav = document.getElementById('primary-nav');
+    if (button && nav) {
+      button.setAttribute('aria-expanded', 'false');
+      nav.dataset.open = 'false';
+    }
+  });
+</script>

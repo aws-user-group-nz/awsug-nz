@@ -1,0 +1,312 @@
+---
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+
+/**
+ * A join button plus a progressive-disclosure expander.
+ *
+ * Built on native <details>/<summary>, so keyboard handling, screen-reader
+ * announcement and the open/closed state all come free with no JavaScript.
+ *
+ * Deliberately not Discord's official widget iframe: that leaks every
+ * visitor's IP address to Discord whether or not they interact with it, and
+ * cannot be styled to match the theme. The member count instead arrives in our
+ * own events payload, fetched from our own origin. Without that data the panel
+ * is still a perfectly good join button.
+ */
+
+const base = import.meta.env.BASE_URL;
+---
+
+<div class="discord on-dark" data-discord data-base={base}>
+  <div class="discord-main">
+    <div class="discord-intro">
+      <Icon name="discord" size="lg" class="discord-glyph" />
+      <div>
+        <h2 class="discord-title">Join us on Discord</h2>
+        <p class="discord-blurb">{site.discord.blurb}</p>
+        <p class="discord-count" data-discord-count hidden>
+          <span class="dot" aria-hidden="true"></span>
+          <span data-discord-count-text></span>
+        </p>
+      </div>
+    </div>
+
+    <a
+      class="btn btn-primary discord-join"
+      href={site.discord.invite}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Icon name="discord" size="sm" /> Join the server
+    </a>
+  </div>
+
+  <details class="discord-more">
+    <summary>
+      <span>What's in there</span>
+      <Icon name="chevron" size="sm" class="summary-chevron" />
+    </summary>
+
+    <div class="discord-detail">
+      <ul class="discord-highlights">
+        {
+          site.discord.highlights.map((item) => (
+            <li>
+              <Icon name="arrow-right" size="sm" />
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="discord-events" data-discord-events hidden>
+        <h3 class="discord-subhead">Next on Discord</h3>
+        <ul data-discord-events-list></ul>
+      </div>
+    </div>
+  </details>
+</div>
+
+<template data-discord-event-template>
+  <li>
+    <span class="discord-event-date" data-field="date"></span>
+    <a
+      class="discord-event-title"
+      data-field="link"
+      target="_blank"
+      rel="noopener noreferrer"
+    ></a>
+  </li>
+</template>
+
+<style>
+  .discord {
+    background: var(--surface-inverse);
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    border: 1px solid transparent;
+    border-left: 4px solid var(--accent);
+  }
+
+  .discord-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+  }
+
+  .discord-intro {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+
+  .discord-glyph {
+    color: var(--accent);
+    margin-top: var(--space-1);
+  }
+
+  .discord-title {
+    font-size: var(--text-xl);
+  }
+
+  .discord-blurb {
+    margin-top: var(--space-2);
+    max-width: 55ch;
+    opacity: 0.9;
+    font-size: var(--text-sm);
+  }
+
+  .discord-count {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--success);
+    flex-shrink: 0;
+  }
+
+  .discord-join {
+    flex-shrink: 0;
+  }
+
+  .discord-more {
+    margin-top: var(--space-5);
+    border-top: 1px solid rgb(255 255 255 / 15%);
+    padding-top: var(--space-4);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--accent);
+    list-style: none;
+    width: fit-content;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .summary-chevron {
+    transition: transform var(--transition-fast);
+  }
+
+  [open] > summary .summary-chevron {
+    transform: rotate(180deg);
+  }
+
+  .discord-detail {
+    margin-top: var(--space-4);
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .discord-highlights {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .discord-highlights li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: var(--text-sm);
+  }
+
+  .discord-highlights :global(.icon) {
+    color: var(--accent);
+    margin-top: 0.15em;
+  }
+
+  .discord-subhead {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: var(--space-3);
+  }
+
+  .discord-events ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .discord-events li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--text-sm);
+  }
+
+  .discord-event-date {
+    color: var(--grey-200);
+    font-size: var(--text-xs);
+  }
+
+  .discord-event-title {
+    color: var(--white);
+  }
+</style>
+
+<script>
+  import { eventsUrl, fetchEvents, upcoming } from '../lib/api';
+
+  const dateFormat = new Intl.DateTimeFormat('en-NZ', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'Pacific/Auckland',
+  });
+
+  async function hydrate(root: HTMLElement) {
+    const result = await fetchEvents(eventsUrl(root.dataset.base ?? '/'));
+    // Absent or broken data leaves the plain join button in place, which is
+    // the whole point of not embedding Discord's widget.
+    if (result.status === 'error') return;
+
+    const { discord, events } = result.payload;
+
+    const online = discord?.online;
+    if (typeof online === 'number' && online > 0) {
+      const countBox = root.querySelector<HTMLElement>('[data-discord-count]');
+      const countText = root.querySelector<HTMLElement>(
+        '[data-discord-count-text]'
+      );
+      if (countBox && countText) {
+        const total = discord?.total;
+        countText.textContent = total
+          ? `${online} online of ${total} members`
+          : `${online} online now`;
+        countBox.hidden = false;
+      }
+    }
+
+    const template = document.querySelector<HTMLTemplateElement>(
+      '[data-discord-event-template]'
+    );
+    const box = root.querySelector<HTMLElement>('[data-discord-events]');
+    const list = root.querySelector<HTMLElement>('[data-discord-events-list]');
+    if (!template || !box || !list) return;
+
+    const discordEvents = upcoming(events)
+      .filter((event) => event.source === 'discord')
+      .slice(0, 3);
+    if (discordEvents.length === 0) return;
+
+    for (const event of discordEvents) {
+      const fragment = template.content.cloneNode(true) as DocumentFragment;
+      fragment.querySelector('[data-field="date"]')!.textContent =
+        dateFormat.format(new Date(event.start));
+      const link = fragment.querySelector<HTMLAnchorElement>(
+        '[data-field="link"]'
+      )!;
+      link.textContent = event.title;
+      link.href = event.url ?? root.querySelector<HTMLAnchorElement>('.discord-join')!.href;
+      list.append(fragment);
+    }
+
+    box.hidden = false;
+  }
+
+  function hydrateAll() {
+    document.querySelectorAll<HTMLElement>('[data-discord]').forEach((root) => {
+      if (root.dataset.discordHydrated === 'true') return;
+      root.dataset.discordHydrated = 'true';
+      hydrate(root).catch(() => {});
+    });
+  }
+
+  hydrateAll();
+  document.addEventListener('astro:page-load', hydrateAll);
+</script>
+
+<noscript>
+  <style>
+    .discord-more { display: none; }
+  </style>
+</noscript>

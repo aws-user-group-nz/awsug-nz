@@ -1,0 +1,79 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  /** Renders the animated gradient. Off for interior pages. */
+  animated?: boolean;
+}
+
+const { title, subtitle, animated = false } = Astro.props;
+---
+
+<section class:list={['hero', 'on-dark', animated && 'hero-animated']}>
+  <div class="container hero-inner">
+    <h1 class="hero-title">{title}</h1>
+    {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+    <div class="hero-actions">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--surface-inverse);
+    color: var(--white);
+    padding-block: var(--space-8);
+    text-align: center;
+  }
+
+  .hero-animated {
+    background: linear-gradient(
+      -45deg,
+      var(--gradient-1),
+      var(--gradient-2),
+      var(--gradient-3),
+      var(--gradient-4)
+    );
+    background-size: 400% 400%;
+    animation: hero-pan 18s ease infinite;
+  }
+
+  @keyframes hero-pan {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* The global reduced-motion rule neutralises the animation; pin the
+     gradient to a fixed, still-attractive position so it does not freeze
+     mid-pan at an arbitrary offset. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-animated {
+      background-position: 0% 50%;
+    }
+  }
+
+  .hero-inner {
+    max-width: 800px;
+  }
+
+  .hero-subtitle {
+    margin-top: var(--space-4);
+    font-size: var(--text-md);
+    opacity: 0.92;
+  }
+
+  .hero-actions:not(:empty) {
+    margin-top: var(--space-6);
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

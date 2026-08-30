@@ -1,0 +1,243 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import site from '../../data/site.json';
+import manifest2023 from '../../data/photo-manifests/2023.json';
+import manifest2024 from '../../data/photo-manifests/2024.json';
+import manifest2025 from '../../data/photo-manifests/2025.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const years = [manifest2025, manifest2024, manifest2023].map((manifest) => ({
+  year: manifest.year,
+  count: manifest.photos.length,
+  cover: `${site.photoArchiveBase}/${manifest.dir}/${manifest.photos[0]}`,
+}));
+---
+
+<BaseLayout
+  title="Community Days"
+  description="AWS Community Day Aotearoa and Oceania — full-day conferences run by and for the AWS community, plus photos from past events."
+  ogImage="community-days.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+      <h1 class="page-title">Community Days</h1>
+      <p class="lede">
+        Community Days are full-day conferences organised by and for the AWS
+        community — technical talks, workshops and a lot of hallway
+        conversation.
+      </p>
+
+      <section class="events">
+        <h2 class="section-title">Our events</h2>
+        <ul class="grid grid-auto event-cards">
+          {
+            site.relatedSites.map((event) => (
+              <li>
+                <a
+                  class="card card-link"
+                  href={event.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <h3 class="event-name">{event.label}</h3>
+                  <p class="event-desc">{event.description}</p>
+                  <span class="event-more">
+                    Visit site <Icon name="external" size="sm" />
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="archive">
+        <h2 class="section-title">Photo archive</h2>
+        <p class="archive-intro">
+          Photos from past AWS Community Day Aotearoa conferences.
+        </p>
+        <ul class="grid grid-auto year-cards">
+          {
+            years.map((entry) => (
+              <li>
+                <a
+                  class="year-card"
+                  href={`${base}/community-days/photos/${entry.year}`}
+                >
+                  <img
+                    src={entry.cover}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="year-label">
+                    <strong>{entry.year}</strong>
+                    <span>{entry.count} photos</span>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .events,
+  .archive {
+    margin-top: var(--space-8);
+  }
+
+  .event-cards,
+  .year-cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Grid stretches the <li>; the card must fill it so both tiles match. */
+  .event-cards > li {
+    display: flex;
+  }
+
+  .event-cards .card-link {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    gap: 0.45rem;
+    padding: 1.15rem 1.15rem 1.05rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: none;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .event-cards .card-link:hover {
+    border-color: var(--accent);
+    background: var(--surface-raised);
+    box-shadow: none;
+    transform: translateY(-2px);
+  }
+
+  .event-cards .card-link:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .event-cards .card-link,
+    .event-cards .card-link:hover {
+      transform: none;
+    }
+  }
+
+  .event-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+
+  .event-desc {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .event-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    margin-top: 0.35rem;
+    color: var(--accent-text);
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  /* Keep the external glyph square — em width/height alone can distort in flex. */
+  .event-more :global(.icon) {
+    width: 0.9em;
+    height: 0.9em;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+  }
+
+  .archive-intro {
+    margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+    color: var(--text-secondary);
+  }
+
+  .year-card {
+    display: block;
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--white);
+    background: var(--surface-inverse);
+    border: 1px solid transparent;
+    transition: border-color var(--transition-fast);
+  }
+
+  .year-card:hover {
+    border-color: var(--accent);
+  }
+
+  .year-card:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .year-card img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    transition:
+      transform var(--transition-normal),
+      opacity var(--transition-fast);
+    opacity: 0.75;
+  }
+
+  .year-card:hover img {
+    transform: scale(1.05);
+    opacity: 0.55;
+  }
+
+  .year-label {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-4);
+    background: linear-gradient(transparent, rgb(0 0 0 / 80%));
+  }
+
+  .year-label strong {
+    font-size: var(--text-2xl);
+    line-height: 1.1;
+  }
+
+  .year-label span {
+    font-size: var(--text-sm);
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>

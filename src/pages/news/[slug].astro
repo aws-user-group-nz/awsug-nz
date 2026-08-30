@@ -1,0 +1,97 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+
+export async function getStaticPaths() {
+  const news = await getCollection('news');
+  return news.map((item) => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const dateFormat = new Intl.DateTimeFormat('en-NZ', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'Pacific/Auckland',
+});
+
+function resolve(href: string) {
+  return href.startsWith('/') ? `${base}${href}` : href;
+}
+---
+
+<BaseLayout
+  title={item.data.title}
+  description={item.data.summary}
+  ogImage="news.png"
+>
+  <article class="page">
+    <div class="container">
+      <div class="content-panel">
+      <a class="back" href={`${base}/news`}>All news</a>
+
+      <div class="meta">
+        {item.data.badge && <span class="tag tag-accent">{item.data.badge}</span>}
+        <time datetime={item.data.date.toISOString()}>
+          {dateFormat.format(item.data.date)}
+        </time>
+      </div>
+
+      <h1 class="page-title">{item.data.title}</h1>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        item.data.link && (
+          <a
+            class="btn btn-primary cta"
+            href={resolve(item.data.link.href)}
+            target={item.data.link.href.startsWith('/') ? undefined : '_blank'}
+            rel={item.data.link.href.startsWith('/') ? undefined : 'noopener noreferrer'}
+          >
+            {item.data.link.label} <Icon name="arrow-right" size="sm" />
+          </a>
+        )
+      }
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  .page-title {
+    margin-top: var(--space-3);
+  }
+
+  .cta {
+    margin-top: var(--space-6);
+  }
+</style>

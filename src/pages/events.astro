@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EventList from '../components/EventList.astro';
+import Icon from '../components/Icon.astro';
+import site from '../data/site.json';
+---
+
+<BaseLayout
+  title="Events"
+  description="Every upcoming AWS User Group Aotearoa event — meetups, Discord sessions and AWS streams — in one calendar."
+  ogImage="events.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+        <h1 class="page-title">Events</h1>
+        <p class="lede">
+          Meetups, Discord sessions and AWS streams in one place. Times are
+          shown in New Zealand time. Use the calendar buttons to add anything to
+          your own calendar.
+        </p>
+
+        <div class="list">
+          <EventList
+            calendarLinks
+            headingLevel="h2"
+            emptyMessage="Nothing is scheduled at the moment. New events are announced on Discord first, so that's the place to watch."
+          />
+        </div>
+
+        <aside class="aside">
+          <h2>Where these come from</h2>
+          <p>
+            This calendar is assembled from our Discord events, the Meetup.com
+            groups and AWS's own Twitch and YouTube streams, then served as a
+            single cached file. Nothing on this page talks to Discord, Meetup,
+            Twitch or YouTube directly, so visiting it doesn't share your
+            details with any of them.
+          </p>
+          <a
+            class="btn btn-outline"
+            href={site.discord.invite}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="discord" size="sm" /> Announcements on Discord
+          </a>
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .list {
+    margin-top: var(--space-6);
+  }
+
+  .aside {
+    margin-top: var(--space-8);
+    padding: var(--space-5);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .aside h2 {
+    font-size: var(--text-md);
+  }
+
+  .aside p {
+    margin: var(--space-3) 0 var(--space-4);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    max-width: 65ch;
+  }
+</style>

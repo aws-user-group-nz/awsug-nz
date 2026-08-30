@@ -1,0 +1,105 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import MeetupLeads from '../../components/MeetupLeads.astro';
+import committee from '../../data/committee.json';
+import site from '../../data/site.json';
+
+export async function getStaticPaths() {
+  const meetups = await getCollection('meetups');
+  return meetups.map((meetup) => ({
+    params: { slug: meetup.id },
+    props: { meetup },
+  }));
+}
+
+const { meetup } = Astro.props;
+const { Content } = await render(meetup);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const leadGroup = committee.meetupLeads.find(
+  (group) => group.meetup === meetup.id || group.also === meetup.id
+);
+const leads = leadGroup?.people ?? [];
+---
+
+<BaseLayout
+  title={meetup.data.title}
+  description={meetup.data.description}
+  ogImage="meetups.png"
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+      <div class="crumb">
+        <a class="back" href={`${base}/meetups`}>All meetups</a>
+        <span class="tag">{meetup.data.region}</span>
+      </div>
+      <h1 class="page-title">{meetup.data.title}</h1>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <MeetupLeads people={leads} />
+
+      <div class="links">
+        {
+          meetup.data.meetupUrl && (
+            <a
+              class="btn btn-primary"
+              href={meetup.data.meetupUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name="external" size="sm" /> Meetup.com page
+            </a>
+          )
+        }
+        <a class="btn btn-outline" href={`${base}/events`}>
+          <Icon name="calendar" size="sm" /> Upcoming events
+        </a>
+        <a
+          class="btn btn-outline"
+          href={site.discord.invite}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon name="discord" size="sm" /> Discord
+        </a>
+      </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .crumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .back {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .page-title {
+    margin-top: var(--space-3);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+</style>

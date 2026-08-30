@@ -1,0 +1,492 @@
+---
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+
+interface Props {
+  /** Cap the number rendered. Omit to show everything upcoming. */
+  limit?: number;
+  /** Show per-event "Add to calendar" controls. */
+  calendarLinks?: boolean;
+  /** Message shown when the feed loads but has nothing upcoming. */
+  emptyMessage?: string;
+  /**
+   * h3 suits the home page, where the list sits under an h2 section heading.
+   * The events page passes h2 so the outline does not skip a level.
+   */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const {
+  limit,
+  calendarLinks = false,
+  emptyMessage = 'No events scheduled right now. New ones are announced on Discord first.',
+  headingLevel = 'h3',
+} = Astro.props;
+
+const Heading = headingLevel;
+
+const base = import.meta.env.BASE_URL;
+---
+
+<div
+  class="events"
+  data-events
+  data-base={base}
+  data-limit={limit ?? ''}
+  data-calendar-links={String(calendarLinks)}
+  aria-busy="true"
+>
+  {/* Skeletons occupy the same box as a loaded card, so the page does not
+      jump when the feed arrives. Replaced wholesale on first render. */}
+  <ul class="event-list" data-events-skeleton aria-hidden="true">
+    {
+      Array.from({ length: limit ?? 3 }).map(() => (
+        <li class="card event-card skeleton">
+          <span class="skeleton-line skeleton-date" />
+          <span class="skeleton-line skeleton-title" />
+          <span class="skeleton-line skeleton-body" />
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="events-status visually-hidden" data-events-status role="status">
+    Loading events
+  </p>
+
+  <ul class="event-list" data-events-target hidden></ul>
+
+  <p class="events-empty" data-events-empty hidden>{emptyMessage}</p>
+
+  <p class="events-error" data-events-error hidden>
+    <Icon name="clock" size="sm" />
+    <span>
+      We couldn't load the event feed just now. Our
+      <a
+        href={site.discord.invite}
+        target="_blank"
+        rel="noopener noreferrer">Discord</a
+      > always
+      has the latest.
+    </span>
+  </p>
+</div>
+
+<template data-event-template>
+  <li class="card event-card">
+    <div class="event-when">
+      <span class="event-day" data-field="day"></span>
+      <span class="event-month" data-field="month"></span>
+    </div>
+    <div class="event-body">
+      <div class="event-tags">
+        <span class="tag" data-field="source"></span>
+        <span class="tag tag-online" data-field="mode"></span>
+      </div>
+      <Heading class="event-title">
+        <a data-field="title-link" target="_blank" rel="noopener noreferrer"></a>
+        <span data-field="title-text"></span>
+      </Heading>
+      <p class="event-meta">
+        <span class="event-time" data-field="time"></span>
+        <span class="event-location" data-field="location"></span>
+      </p>
+      <p class="event-description" data-field="description"></p>
+      <div class="event-actions" data-field="actions">
+        <a class="btn btn-sm btn-outline" data-field="ics" download>Add to calendar</a>
+        <a
+          class="btn btn-sm btn-outline"
+          data-field="gcal"
+          target="_blank"
+          rel="noopener noreferrer">Google Calendar</a
+        >
+      </div>
+    </div>
+  </li>
+</template>
+
+<style>
+  .event-list {
+    display: grid;
+    gap: var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .event-card {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .event-when {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2);
+    background: var(--surface-inverse);
+    color: var(--white);
+    border-radius: var(--radius-sm);
+    line-height: 1.1;
+  }
+
+  .event-day {
+    font-size: var(--text-xl);
+    font-weight: 800;
+  }
+
+  .event-month {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .event-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Astro cannot add its scope attribute to a dynamically-chosen tag, so the
+     heading below is emitted without one and scoped selectors miss it. */
+  :global(.event-title) {
+    font-size: var(--text-md);
+    margin-top: var(--space-3);
+  }
+
+  :global(.event-title) a {
+    text-decoration: none;
+  }
+
+  :global(.event-title) a:hover {
+    color: var(--accent-text);
+    text-decoration: underline;
+  }
+
+  .event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  .event-description {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  .event-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  .events-empty,
+  .events-error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    background: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+  }
+
+  .events-error a {
+    color: var(--accent-text);
+  }
+
+  /* Skeleton */
+  .skeleton {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .skeleton-line {
+    display: block;
+    height: 0.75rem;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      90deg,
+      var(--surface-sunken) 25%,
+      var(--border) 37%,
+      var(--surface-sunken) 63%
+    );
+    background-size: 400% 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+
+  .skeleton-date {
+    width: 25%;
+  }
+
+  .skeleton-title {
+    width: 70%;
+    height: 1.1rem;
+  }
+
+  .skeleton-body {
+    width: 90%;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0 50%;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .event-card {
+      grid-template-columns: 56px 1fr;
+      gap: var(--space-4);
+    }
+  }
+</style>
+
+<script>
+  import { eventsUrl, fetchEvents, upcoming, type AppEvent } from '../lib/api';
+
+  const SOURCE_LABELS: Record<string, string> = {
+    discord: 'Discord',
+    meetup: 'Meetup',
+    twitch: 'Twitch',
+    youtube: 'YouTube',
+    other: 'Event',
+  };
+
+  const TIMEZONE = 'Pacific/Auckland';
+
+  const dayFormat = new Intl.DateTimeFormat('en-NZ', {
+    day: 'numeric',
+    timeZone: TIMEZONE,
+  });
+  const monthFormat = new Intl.DateTimeFormat('en-NZ', {
+    month: 'short',
+    timeZone: TIMEZONE,
+  });
+  const timeFormat = new Intl.DateTimeFormat('en-NZ', {
+    weekday: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: TIMEZONE,
+  });
+
+  /** Calendar formats want UTC basic format: 20260806T053000Z */
+  function toCalendarStamp(iso: string): string {
+    return `${new Date(iso).toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
+  }
+
+  /** An event with no end time still needs one in a calendar entry. */
+  function endOrDefault(event: AppEvent): string {
+    if (event.end) return event.end;
+    return new Date(Date.parse(event.start) + 2 * 60 * 60 * 1000).toISOString();
+  }
+
+  function escapeIcs(value: string): string {
+    return value
+      .replace(/\\/g, '\\\\')
+      .replace(/;/g, '\\;')
+      .replace(/,/g, '\\,')
+      .replace(/\r?\n/g, '\\n');
+  }
+
+  /**
+   * Built in the browser as a data: URL. The old site shelled out to PHP
+   * generators for this, which have not existed since it moved to static
+   * hosting, so the buttons were dead.
+   */
+  function icsHref(event: AppEvent): string {
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//AWS User Group Aotearoa//EN',
+      'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      `UID:${escapeIcs(event.id)}@awsug.nz`,
+      `DTSTAMP:${toCalendarStamp(new Date().toISOString())}`,
+      `DTSTART:${toCalendarStamp(event.start)}`,
+      `DTEND:${toCalendarStamp(endOrDefault(event))}`,
+      `SUMMARY:${escapeIcs(event.title)}`,
+      event.description ? `DESCRIPTION:${escapeIcs(event.description)}` : null,
+      event.location ? `LOCATION:${escapeIcs(event.location)}` : null,
+      event.url ? `URL:${escapeIcs(event.url)}` : null,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].filter((line): line is string => line !== null);
+
+    return `data:text/calendar;charset=utf-8,${encodeURIComponent(lines.join('\r\n'))}`;
+  }
+
+  function googleCalendarHref(event: AppEvent): string {
+    const url = new URL('https://calendar.google.com/calendar/render');
+    url.searchParams.set('action', 'TEMPLATE');
+    url.searchParams.set('text', event.title);
+    url.searchParams.set(
+      'dates',
+      `${toCalendarStamp(event.start)}/${toCalendarStamp(endOrDefault(event))}`
+    );
+    if (event.description) url.searchParams.set('details', event.description);
+    if (event.location) url.searchParams.set('location', event.location);
+    return url.href;
+  }
+
+  function slugForFile(event: AppEvent): string {
+    return `${event.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.ics`;
+  }
+
+  function renderEvent(
+    event: AppEvent,
+    template: HTMLTemplateElement,
+    withCalendarLinks: boolean
+  ): DocumentFragment {
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
+    const field = <T extends Element>(name: string) =>
+      fragment.querySelector<T>(`[data-field="${name}"]`);
+
+    const start = new Date(event.start);
+    field('day')!.textContent = dayFormat.format(start);
+    field('month')!.textContent = monthFormat.format(start);
+    field('source')!.textContent = SOURCE_LABELS[event.source] ?? 'Event';
+
+    const mode = field<HTMLElement>('mode')!;
+    mode.textContent = event.online ? 'Online' : 'In person';
+    if (!event.online) mode.classList.add('tag-accent');
+
+    const titleLink = field<HTMLAnchorElement>('title-link')!;
+    const titleText = field<HTMLElement>('title-text')!;
+    if (event.url) {
+      titleLink.textContent = event.title;
+      titleLink.href = event.url;
+      titleLink.rel = 'noopener noreferrer';
+      titleText.remove();
+    } else {
+      titleText.textContent = event.title;
+      titleLink.remove();
+    }
+
+    let time = timeFormat.format(start);
+    if (event.end) {
+      const endTime = new Intl.DateTimeFormat('en-NZ', {
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZone: TIMEZONE,
+      }).format(new Date(event.end));
+      time = `${time} – ${endTime}`;
+    }
+    field('time')!.textContent = time;
+
+    const location = field<HTMLElement>('location')!;
+    if (event.location) {
+      location.textContent = event.location;
+    } else {
+      location.remove();
+    }
+
+    const description = field<HTMLElement>('description')!;
+    if (event.description) {
+      description.textContent = event.description;
+    } else {
+      description.remove();
+    }
+
+    const actions = field<HTMLElement>('actions')!;
+    if (withCalendarLinks) {
+      const ics = field<HTMLAnchorElement>('ics')!;
+      ics.href = icsHref(event);
+      ics.setAttribute('download', slugForFile(event));
+      field<HTMLAnchorElement>('gcal')!.href = googleCalendarHref(event);
+    } else {
+      actions.remove();
+    }
+
+    return fragment;
+  }
+
+  async function hydrate(root: HTMLElement) {
+    const template = document.querySelector<HTMLTemplateElement>(
+      '[data-event-template]'
+    );
+    const target = root.querySelector<HTMLElement>('[data-events-target]');
+    const skeleton = root.querySelector<HTMLElement>('[data-events-skeleton]');
+    const status = root.querySelector<HTMLElement>('[data-events-status]');
+    const empty = root.querySelector<HTMLElement>('[data-events-empty]');
+    const errorBox = root.querySelector<HTMLElement>('[data-events-error]');
+    if (!template || !target || !skeleton || !status || !empty || !errorBox) return;
+
+    const limitAttr = root.dataset.limit;
+    const limit = limitAttr ? Number(limitAttr) : undefined;
+    const withCalendarLinks = root.dataset.calendarLinks === 'true';
+
+    const result = await fetchEvents(eventsUrl(root.dataset.base ?? '/'));
+    root.setAttribute('aria-busy', 'false');
+    skeleton.remove();
+
+    if (result.status === 'error') {
+      status.textContent = 'Could not load events';
+      errorBox.hidden = false;
+      return;
+    }
+
+    let events = upcoming(result.payload.events);
+    if (limit !== undefined && Number.isFinite(limit)) {
+      events = events.slice(0, limit);
+    }
+
+    if (events.length === 0) {
+      status.textContent = 'No upcoming events';
+      empty.hidden = false;
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    for (const event of events) {
+      fragment.append(renderEvent(event, template, withCalendarLinks));
+    }
+    target.append(fragment);
+    target.hidden = false;
+    status.textContent =
+      events.length === 1
+        ? '1 upcoming event loaded'
+        : `${events.length} upcoming events loaded`;
+
+    root.dispatchEvent(
+      new CustomEvent('events:loaded', { bubbles: true, detail: result.payload })
+    );
+  }
+
+  function hydrateAll() {
+    document.querySelectorAll<HTMLElement>('[data-events]').forEach((root) => {
+      if (root.dataset.eventsHydrated === 'true') return;
+      root.dataset.eventsHydrated = 'true';
+      void hydrate(root);
+    });
+  }
+
+  // Run now (covers script injected mid-navigation) and on every ClientRouter swap.
+  hydrateAll();
+  document.addEventListener('astro:page-load', hydrateAll);
+</script>
+
+<noscript>
+  <style>
+    [data-events-skeleton] { display: none !important; }
+  </style>
+  <p class="events-empty">
+    Event listings require JavaScript. Visit our
+    <a href="https://discord.gg/4UJfJ755T8" target="_blank" rel="noopener noreferrer">Discord</a>
+    for the latest event announcements.
+  </p>
+</noscript>
