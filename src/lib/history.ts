@@ -25,6 +25,7 @@ export interface PastCommitteeYear {
  * Untitled people (Member / omitted) sort after every titled role, by name.
  */
 const ROLE_RANK: Record<string, number> = {
+  'Inc Soc Founder': 5,
   Founder: 10,
   'Co-Founder': 20,
   President: 30,
