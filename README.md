@@ -21,7 +21,7 @@ Infra (bucket + OIDC role) is in `terraform-aws`. Set these repository
 **variables** on this repo (no secrets required for account id):
 
 | Variable | Example |
-|----------|---------|
+| ---------- | --------- |
 | `AWS_ACCOUNT_ID` | `161492946389` |
 | `AWS_REGION` | `ap-southeast-6` |
 | `OIDC_ROLE_NAME` | `awsug-nz-site-oidc` |
@@ -60,7 +60,8 @@ npm run preview    # serve dist/ on port 8001
 ```
 
 Site search (header / Ctrl+K) needs the Pagefind index from `npm run build`;
-`astro dev` alone will not have search results until you build once.
+`astro dev` alone will not have search results until you build once. PDFs under
+`public/` (copied into `dist/`) are indexed automatically — no per-file config.
 
 | Script | What it does |
 | --- | --- |
@@ -72,7 +73,7 @@ Site search (header / Ctrl+K) needs the Pagefind index from `npm run build`;
 ## Checks
 
 | Check | When | What |
-|-------|------|------|
+| ------- | ------ | ------ |
 | `build` | PR + push to `main` | `astro check` + `astro build` (+ Pagefind index) |
 | `deploy` | push to `main`, after `build` | reusable Deploy workflow: `s3 sync` + invalidation (when vars set) |
 | Markdown Lint | PR | [actions](https://github.com/aws-user-group-nz/actions) `markdown-lint` |

@@ -251,9 +251,23 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
   }
 
   .search-results :global(.search-result-title) {
-    display: block;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
     font-weight: 600;
     color: var(--text-primary);
+  }
+
+  .search-results :global(.search-result-badge) {
+    flex-shrink: 0;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.05rem 0.35rem;
   }
 
   .search-results :global(.search-result-excerpt) {
@@ -294,7 +308,11 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
     }
 
     function applyShortcutHint() {
-      var isApple = /Mac|iPhone|iPad/.test(navigator.platform) || /Mac OS/.test(navigator.userAgent);
+      var platform =
+        (navigator.userAgentData && navigator.userAgentData.platform) ||
+        navigator.platform ||
+        '';
+      var isApple = /Mac|iPhone|iPad|iPod/i.test(platform) || /Mac OS/i.test(navigator.userAgent);
       var hint = isApple ? '\u2318K' : 'Ctrl K';
       document.querySelectorAll('[data-search-kbd]').forEach(function (kbd) {
         kbd.textContent = hint;
@@ -302,6 +320,32 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
       document.querySelectorAll('[data-search-open]').forEach(function (btn) {
         btn.title = 'Search (' + hint + ')';
       });
+    }
+
+    function titleFromUrl(url) {
+      try {
+        var path = new URL(url, window.location.origin).pathname;
+        var name = path.split('/').filter(Boolean).pop() || url;
+        if (/\.pdf$/i.test(name)) {
+          name = name.replace(/\.pdf$/i, '');
+        }
+        name = name
+          .replace(/^awsugnz[-_]?/i, '')
+          .replace(/[-_]+/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        if (!name) return url;
+        return name.replace(/\b[a-z]/g, function (ch) {
+          return ch.toUpperCase();
+        });
+      } catch (e) {
+        return url;
+      }
+    }
+
+    function isPdfResult(item) {
+      if (item.meta && item.meta.type === 'pdf') return true;
+      return /\.pdf($|\?)/i.test(item.url || '');
     }
 
     function ensurePagefind() {
@@ -386,10 +430,24 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
               var li = document.createElement('li');
               var a = document.createElement('a');
               a.href = item.url;
+              var pdf = isPdfResult(item);
+              if (pdf) {
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+              }
 
               var title = document.createElement('span');
               title.className = 'search-result-title';
-              title.textContent = (item.meta && item.meta.title) || item.url;
+              var titleText = document.createElement('span');
+              titleText.textContent =
+                (item.meta && item.meta.title) || titleFromUrl(item.url);
+              title.appendChild(titleText);
+              if (pdf) {
+                var badge = document.createElement('span');
+                badge.className = 'search-result-badge';
+                badge.textContent = 'PDF';
+                title.appendChild(badge);
+              }
 
               var excerpt = document.createElement('span');
               excerpt.className = 'search-result-excerpt';
@@ -413,7 +471,7 @@ const pagefindSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/pag
           });
         })
         .catch(function () {
-          setStatus('Search index unavailable. Run a production build first (npm run build).');
+          setStatus('Search is temporarily unavailable. Please try again later.');
         });
     }
 
