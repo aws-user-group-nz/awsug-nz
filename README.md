@@ -55,9 +55,12 @@ Requires Node 24 (see [`.nvmrc`](.nvmrc)).
 npm ci
 npm run dev        # http://localhost:8001
 npm run check      # Astro / TS diagnostics
-npm run build      # static output in dist/
+npm run build      # static output in dist/ (+ Pagefind index)
 npm run preview    # serve dist/ on port 8001
 ```
+
+Site search (header / Ctrl+K) needs the Pagefind index from `npm run build`;
+`astro dev` alone will not have search results until you build once.
 
 | Script | What it does |
 | --- | --- |
@@ -70,7 +73,7 @@ npm run preview    # serve dist/ on port 8001
 
 | Check | When | What |
 |-------|------|------|
-| `build` | PR + push to `main` | `astro check` + `astro build` |
+| `build` | PR + push to `main` | `astro check` + `astro build` (+ Pagefind index) |
 | `deploy` | push to `main`, after `build` | reusable Deploy workflow: `s3 sync` + invalidation (when vars set) |
 | Markdown Lint | PR | [actions](https://github.com/aws-user-group-nz/actions) `markdown-lint` |
 | Commit Message Conformance | PR | [actions](https://github.com/aws-user-group-nz/actions) `commitmsg-conform` (skips Dependabot) |

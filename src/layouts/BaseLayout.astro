@@ -12,9 +12,11 @@ interface Props {
   description?: string;
   ogImage?: string;
   noindex?: boolean;
+  /** Omit this page from the Pagefind search index. */
+  noSearch?: boolean;
 }
 
-const { title, description, ogImage, noindex } = Astro.props;
+const { title, description, ogImage, noindex, noSearch = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -98,7 +100,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
-    <main id="main" tabindex="-1" transition:animate="none">
+    <main
+      id="main"
+      tabindex="-1"
+      {...(noSearch ? { 'data-pagefind-ignore': true } : { 'data-pagefind-body': true })}
+      transition:animate="none"
+    >
       <slot />
     </main>
     <Footer />
