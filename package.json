@@ -30,7 +30,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "axe-core": "^4.13.0",
     "pagefind": "^1.5.2",
-    "playwright": "^1.62.1",
+    "playwright": "^1.63.0",
     "satori": "^0.33.4",
     "typescript": "^7.0.2",
     "unpdf": "^1.8.1"
