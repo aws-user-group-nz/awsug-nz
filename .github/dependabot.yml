@@ -17,3 +17,7 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    # @astrojs/check@0.9.x peers typescript ^5 || ^6 only; major bumps break npm ci
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
