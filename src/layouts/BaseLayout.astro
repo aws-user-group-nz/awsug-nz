@@ -4,6 +4,7 @@ import '../styles/base.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEO from '../components/SEO.astro';
+import site from '../data/site.json';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import interLatinExt from '@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2?url';
 
@@ -18,6 +19,7 @@ interface Props {
 
 const { title, description, ogImage, noindex, noSearch = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const gaId = site.googleAnalyticsId;
 ---
 
 <!doctype html>
@@ -42,6 +44,40 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={interLatinExt} as="font" type="font/woff2" crossorigin />
     <SEO title={title} description={description} ogImage={ogImage} noindex={noindex} />
+    {
+      gaId && (
+        <>
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            is:inline
+          ></script>
+          {/*
+            send_page_view: false — ClientRouter fires astro:page-load on the
+            first paint and every in-app navigation; one handler covers both.
+          */}
+          <script is:inline define:vars={{ gaId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', gaId, { send_page_view: false });
+
+            if (!window.__awsugGaPageviews) {
+              window.__awsugGaPageviews = true;
+              document.addEventListener('astro:page-load', function () {
+                gtag('event', 'page_view', {
+                  page_title: document.title,
+                  page_location: location.href,
+                  page_path: location.pathname + location.search + location.hash,
+                });
+              });
+            }
+          </script>
+        </>
+      )
+    }
     {/*
       Same-document swaps for in-site links — avoids the full clear/repaint
       flash of a classic MPA navigation. fallback=swap keeps non-VT browsers
