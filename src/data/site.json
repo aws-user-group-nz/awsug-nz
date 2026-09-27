@@ -8,6 +8,8 @@
   "timezone": "Pacific/Auckland",
 
   "googleAnalyticsId": "G-GDEZGPDT5N",
+  "membershipApplicationFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfXoadlzR4rw-9PFNVxF7TpQXWXQJnNgO-RhisFkIUOo-t1ZQ/viewform",
+
   "lookerStudioReports": [
     {
       "id": "paths",
@@ -30,6 +32,7 @@
 
   "nav": [
     { "label": "About", "href": "/about" },
+    { "label": "Join", "href": "/join" },
     { "label": "Meetups", "href": "/meetups" },
     { "label": "Events", "href": "/events" },
     { "label": "Community Days", "href": "/community-days" },
@@ -38,6 +41,7 @@
   ],
 
   "footerLinks": [
+    { "label": "Become a member", "href": "/join" },
     { "label": "Code of Conduct", "href": "/code-of-conduct" },
     { "label": "Our Constitution", "href": "/constitution" },
     { "label": "Our Regulations", "href": "/regulations" },
