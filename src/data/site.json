@@ -8,6 +8,23 @@
   "timezone": "Pacific/Auckland",
 
   "googleAnalyticsId": "G-GDEZGPDT5N",
+  "lookerStudioReports": [
+    {
+      "id": "paths",
+      "label": "Top 10 paths - this week",
+      "embedUrl": "https://datastudio.google.com/embed/reporting/e8845801-2186-470c-b84f-a27184adc057/page/Ajt9F"
+    },
+    {
+      "id": "30d",
+      "label": "Last 30 days",
+      "embedUrl": "https://datastudio.google.com/embed/reporting/4b1537ce-de31-4f0c-85ce-196849bcf75b/page/Ajt9F"
+    },
+    {
+      "id": "ytd",
+      "label": "This year to date",
+      "embedUrl": "https://datastudio.google.com/embed/reporting/e3eb892e-d13f-4dd9-8fff-436eafd368ab/page/Ajt9F"
+    }
+  ],
 
   "photoArchiveBase": "https://awsug.nz/communitydays/archive/photos",
 

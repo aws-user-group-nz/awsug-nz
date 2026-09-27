@@ -12,7 +12,11 @@ export default defineConfig({
   base,
   output: 'static',
   trailingSlash: 'ignore',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !new URL(page).pathname.replace(/\/$/, '').endsWith('/stats'),
+    }),
+  ],
   build: {
     format: 'directory',
   },
