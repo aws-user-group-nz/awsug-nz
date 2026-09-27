@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import site from '../data/site.json';
+
+/** Unlisted traffic dashboards — not linked from nav/footer. */
+const reports = (site.lookerStudioReports ?? []).filter((r) => r.embedUrl?.trim());
+const sandbox =
+  'allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox';
+---
+
+<BaseLayout
+  title="Site traffic"
+  description="Public traffic overview for AWS User Group Aotearoa."
+  noindex
+  noSearch
+>
+  <div class="stats" data-stats>
+    {
+      reports.length === 0 ? (
+        <div class="container">
+          <p class="empty">Set <code>lookerStudioReports</code> in site.json.</p>
+        </div>
+      ) : (
+        <div class="container">
+            <p class="eyebrow">Site traffic</p>
+            <div class="tabs" role="tablist" aria-label="Traffic reports">
+              {reports.map((report, i) => (
+                <button
+                  type="button"
+                  class:list={['tab', i === 0 && 'is-active']}
+                  role="tab"
+                  id={`tab-${report.id}`}
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  aria-controls={`panel-${report.id}`}
+                  data-tab={report.id}
+                  tabindex={i === 0 ? 0 : -1}
+                >
+                  {report.label}
+                </button>
+              ))}
+            </div>
+
+            {reports.map((report, i) => (
+              <div
+                class:list={['panel', i === 0 && 'is-active']}
+                role="tabpanel"
+                id={`panel-${report.id}`}
+                aria-labelledby={`tab-${report.id}`}
+                hidden={i !== 0}
+                data-panel={report.id}
+              >
+                <iframe
+                  class="frame"
+                  title={report.label}
+                  allowfullscreen
+                  sandbox={sandbox}
+                  data-src={report.embedUrl}
+                  src={i === 0 ? report.embedUrl : undefined}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+              </div>
+            ))}
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  function wireStats(root: ParentNode) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    if (!tabs.length) return;
+
+    function activate(id: string) {
+      for (const tab of tabs) {
+        const on = tab.dataset.tab === id;
+        tab.classList.toggle('is-active', on);
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+      }
+      for (const panel of panels) {
+        const on = panel.dataset.panel === id;
+        panel.classList.toggle('is-active', on);
+        panel.hidden = !on;
+        if (on) {
+          const frame = panel.querySelector('iframe');
+          if (frame && !frame.getAttribute('src')) {
+            const src = frame.dataset.src;
+            if (src) frame.src = src;
+          }
+        }
+      }
+    }
+
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.tab;
+        if (id) activate(id);
+      });
+    }
+
+    root.querySelector('.tabs')?.addEventListener('keydown', (event) => {
+      const e = event as KeyboardEvent;
+      const i = tabs.indexOf(document.activeElement as HTMLButtonElement);
+      if (i < 0) return;
+      let next = i;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
+        next = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = tabs.length - 1;
+      else return;
+      e.preventDefault();
+      tabs[next]?.focus();
+      const id = tabs[next]?.dataset.tab;
+      if (id) activate(id);
+    });
+  }
+
+  wireStats(document);
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector('[data-stats]');
+    if (root) wireStats(root);
+  });
+</script>
+
+<style>
+  .stats {
+    padding-block: var(--space-5) var(--space-7);
+  }
+
+  .eyebrow {
+    margin: 0 0 var(--space-3);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+  }
+
+  .tab {
+    appearance: none;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    padding: 0.45rem 0.85rem;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .tab:hover {
+    border-color: var(--accent-text);
+    color: var(--accent-text);
+  }
+
+  .tab.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--text-on-accent);
+  }
+
+  .panel[hidden] {
+    display: none;
+  }
+
+  .frame {
+    display: block;
+    width: 100%;
+    /* Cross-origin Looker embed — height cannot follow report content. */
+    height: 54rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+
+  .empty {
+    color: var(--text-secondary);
+  }
+</style>
