@@ -22,8 +22,11 @@ Aotearoa New Zealand.
 ## Get involved
 
 Whether you're just starting your cloud journey or you're a seasoned AWS
-professional, there's a place for you in our community. Join our Discord server,
-come along to an in-person meetup, or put your hand up to present.
+professional, there's a place for you in our community.
+
+- [Become a member](/join) — free society membership (application form)
+- Join our [Discord](https://discord.gg/4UJfJ755T8)
+- Come along to an in-person meetup, or put your hand up to present
 
 Everyone is welcome. We're all in this together.
 

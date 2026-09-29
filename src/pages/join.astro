@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import site from '../data/site.json';
+
+const formUrl = site.membershipApplicationFormUrl?.trim() || '';
+const embedUrl = formUrl
+  ? `${formUrl}${formUrl.includes('?') ? '&' : '?'}embedded=true`
+  : '';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Membership application"
+  description="Apply for free membership of AWS User Group Aotearoa Incorporated."
+>
+  <div class="page">
+    <div class="container">
+      <div class="content-panel">
+        <h1 class="page-title">Membership application</h1>
+        <p class="lede">
+          Membership is free and open to anyone with an interest in AWS. This is
+          the application form under clause 12.1 of our{' '}
+          <a href={`${base}/constitution`}>Constitution</a>. The Executive
+          Committee considers every application and will let you know its
+          decision.
+        </p>
+
+        {
+          embedUrl ? (
+            <>
+              <p class="fallback">
+                Form not loading?
+                <a href={formUrl} target="_blank" rel="noopener noreferrer">
+                  Open it in a new tab
+                </a>
+                .
+              </p>
+              <div class="form-frame-wrap">
+                <iframe
+                  class="form-frame"
+                  src={embedUrl}
+                  title="Membership application — AWS User Group NZ Incorporated"
+                  loading="lazy"
+                >
+                  Loading…
+                </iframe>
+              </div>
+            </>
+          ) : (
+            <p class="empty">
+              Set <code>membershipApplicationFormUrl</code> in site.json.
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .page-title + .lede {
+    margin-bottom: var(--space-4);
+  }
+
+  .lede a {
+    color: var(--accent-text);
+  }
+
+  .fallback {
+    margin: 0 0 var(--space-4);
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+  }
+
+  .fallback a {
+    color: var(--accent-text);
+  }
+
+  .form-frame-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .form-frame {
+    display: block;
+    width: 100%;
+    height: min(85vh, 56rem);
+    min-height: 40rem;
+    border: 0;
+  }
+
+  .empty {
+    color: var(--text-secondary);
+  }
+</style>
