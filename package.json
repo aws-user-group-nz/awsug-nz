@@ -33,6 +33,6 @@
     "playwright": "^1.65.0",
     "satori": "^0.63.2",
     "typescript": "~6.0.3",
-    "unpdf": "^2.0.1"
+    "unpdf": "^2.1.0"
   }
 }
